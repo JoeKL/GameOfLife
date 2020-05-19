@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define X_value 5
-#define Y_value 5
+#define X_value 20
+#define Y_value 20
 
 struct cell{
 
@@ -19,6 +20,7 @@ struct cell{
 };
 
 struct cell gamefield[X_value][Y_value];
+struct cell gamefieldcopy[X_value][Y_value];
 
 void initialize_game(){
 
@@ -47,7 +49,7 @@ void define_neighborhood(){
     */
 
     //nachbarn eintragen
-    // 0, 2
+
     int x, y;
     for(y = 0; y < Y_value; y++){
         for(x = 0; x < X_value; x++){
@@ -105,12 +107,87 @@ void define_neighborhood(){
     }
 }
 
+
+void define_neighborhoodcopy(){
+
+    /*
+        Nachbar wird wie folgt definiert:
+
+                    1|2|3
+                    4| |5
+                    6|7|8
+    */
+
+    //nachbarn eintragen
+
+    int x, y;
+    for(y = 0; y < Y_value; y++){
+        for(x = 0; x < X_value; x++){
+
+            gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[x-1][y-1];
+            gamefieldcopy[x][y].neighborCell2 = &gamefieldcopy[x][y-1];
+
+            gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[x+1][y-1];
+            gamefieldcopy[x][y].neighborCell4 = &gamefieldcopy[x-1][y];
+
+            gamefieldcopy[x][y].neighborCell5 = &gamefieldcopy[x+1][y];
+            gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[x-1][y+1];
+
+            gamefieldcopy[x][y].neighborCell7 = &gamefieldcopy[x][y+1];
+            gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[x+1][y+1];
+
+            if (x == 0) {
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_value-1][y-1];
+                gamefieldcopy[x][y].neighborCell4 = &gamefieldcopy[X_value-1][y];
+                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_value-1][y+1];
+            }
+            if (y == 0) {
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[x-1][Y_value-1];
+                gamefieldcopy[x][y].neighborCell2 = &gamefieldcopy[x][Y_value-1];
+                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[x+1][Y_value-1];
+            }
+            if (x == X_value-1) {
+                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[0][y-1];
+                gamefieldcopy[x][y].neighborCell5 = &gamefieldcopy[0][y];
+                gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[0][y+1];
+            }
+            if (y == Y_value-1) {
+                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[x-1][0];
+                gamefieldcopy[x][y].neighborCell7 = &gamefieldcopy[x][0];
+                gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[x+1][0];
+
+            }
+
+            if (x == 0 && y == 0){
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_value-1][Y_value-1];
+            }
+
+            if (x == 0 && y == Y_value-1){
+                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_value-1][0];
+            }
+
+            if (x == X_value-1 && y == 0){
+                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[0][Y_value-1];
+            }
+
+            if (x == X_value-1 && y == Y_value-1){
+                gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[0][0];
+            }
+        }
+    }
+}
+
+
 void print_gamestate(){
     int x, y;
 
     for(y = 0; y < Y_value; y++){
         for(x = 0; x < X_value; x++){
-            printf("%i ",gamefield[x][y].alive);
+            if (gamefield[x][y].alive == 1) {
+                printf("X ");
+            }else {
+                printf("_ ");
+            }
         }
         printf("\n");
     }
@@ -156,7 +233,83 @@ void load_preset(){
     }
 }
 
+void run_game(int gameLengthInSenconds, int ticksPerSecond){
 
+    int tickCounter = 0;
+
+    while(tickCounter < ticksPerSecond*gameLengthInSenconds) {
+        double cpu_time_used;
+        clock_t start, end;
+        tickCounter++;
+
+        start = clock();
+        do {
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+        } while(cpu_time_used < (double) 1/ticksPerSecond);
+        tick();
+    }
+}
+
+void tick(){
+    memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
+    define_neighborhoodcopy();
+
+    int x;
+    int y;
+
+    for(y = 0; y < Y_value; y++){
+        for(x = 0; x < X_value; x++){
+            //CountLivingNeighbors();
+            int CountLivingNeighbors = 0;
+            if(gamefieldcopy[x][y].neighborCell1 -> alive == 1){
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell2 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell3 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell4 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell5 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell6 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell7 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+            if(gamefieldcopy[x][y].neighborCell8 -> alive == 1) {
+                CountLivingNeighbors++;
+            }
+
+            //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
+            if(CountLivingNeighbors == 3 && gamefieldcopy[x][y].alive == 0){
+                gamefield[x][y].alive = 1;
+            }
+
+            //Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
+            if (gamefieldcopy[x][y].alive == 1 && CountLivingNeighbors < 2) {
+                    gamefield[x][y].alive = 0;
+            }
+            //Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration lebend.
+            if (gamefieldcopy[x][y].alive == 1 && (CountLivingNeighbors == 2 || CountLivingNeighbors == 3)) {
+                    gamefield[x][y].alive = 1;
+            }
+            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
+            if (gamefieldcopy[x][y].alive == 1 && CountLivingNeighbors > 3) {
+                    gamefield[x][y].alive = 0;
+            }
+        }
+    }
+    system("cls");
+    print_gamestate();
+}
 
 int main(){
     initialize_game();
@@ -165,19 +318,8 @@ int main(){
 
     print_gamestate();
 
-    printf("\n");
+    run_game(10, 10);
 
-    int x_test = 4;
-    int y_test = 4;
-    printf("%d\t", gamefield[x_test][y_test].neighborCell1 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].neighborCell2 -> alive);
-    printf("%d\n", gamefield[x_test][y_test].neighborCell3 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].neighborCell4 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].alive);
-    printf("%d\n", gamefield[x_test][y_test].neighborCell5 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].neighborCell6 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].neighborCell7 -> alive);
-    printf("%d\t", gamefield[x_test][y_test].neighborCell8 -> alive);
 
     return 0;
 }
