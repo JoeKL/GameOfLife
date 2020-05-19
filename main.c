@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define X_value 20
-#define Y_value 20
+#define X_Size 20
+#define Y_Size 20
 
 struct cell{
 
@@ -19,16 +19,18 @@ struct cell{
 
 };
 
-struct cell gamefield[X_value][Y_value];
-struct cell gamefieldcopy[X_value][Y_value];
+
+char symbolTrue, symbolFalse;
+struct cell gamefield[X_Size][Y_Size];
+struct cell gamefieldcopy[X_Size][Y_Size];
 
 void initialize_game(){
 
     int x, y;
 
     //erzeugen des leeren Feldes
-    for(y = 0; y < Y_value; y++){
-        for(x = 0; x < X_value; x++){
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
             gamefield[x][y].alive = 0;
         }
     }
@@ -51,8 +53,8 @@ void define_neighborhood(){
     //nachbarn eintragen
 
     int x, y;
-    for(y = 0; y < Y_value; y++){
-        for(x = 0; x < X_value; x++){
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
 
             gamefield[x][y].neighborCell1 = &gamefield[x-1][y-1];
             gamefield[x][y].neighborCell2 = &gamefield[x][y-1];
@@ -67,21 +69,21 @@ void define_neighborhood(){
             gamefield[x][y].neighborCell8 = &gamefield[x+1][y+1];
 
             if (x == 0) {
-                gamefield[x][y].neighborCell1 = &gamefield[X_value-1][y-1];
-                gamefield[x][y].neighborCell4 = &gamefield[X_value-1][y];
-                gamefield[x][y].neighborCell6 = &gamefield[X_value-1][y+1];
+                gamefield[x][y].neighborCell1 = &gamefield[X_Size-1][y-1];
+                gamefield[x][y].neighborCell4 = &gamefield[X_Size-1][y];
+                gamefield[x][y].neighborCell6 = &gamefield[X_Size-1][y+1];
             }
             if (y == 0) {
-                gamefield[x][y].neighborCell1 = &gamefield[x-1][Y_value-1];
-                gamefield[x][y].neighborCell2 = &gamefield[x][Y_value-1];
-                gamefield[x][y].neighborCell3 = &gamefield[x+1][Y_value-1];
+                gamefield[x][y].neighborCell1 = &gamefield[x-1][Y_Size-1];
+                gamefield[x][y].neighborCell2 = &gamefield[x][Y_Size-1];
+                gamefield[x][y].neighborCell3 = &gamefield[x+1][Y_Size-1];
             }
-            if (x == X_value-1) {
+            if (x == X_Size-1) {
                 gamefield[x][y].neighborCell3 = &gamefield[0][y-1];
                 gamefield[x][y].neighborCell5 = &gamefield[0][y];
                 gamefield[x][y].neighborCell8 = &gamefield[0][y+1];
             }
-            if (y == Y_value-1) {
+            if (y == Y_Size-1) {
                 gamefield[x][y].neighborCell6 = &gamefield[x-1][0];
                 gamefield[x][y].neighborCell7 = &gamefield[x][0];
                 gamefield[x][y].neighborCell8 = &gamefield[x+1][0];
@@ -89,18 +91,18 @@ void define_neighborhood(){
             }
 
             if (x == 0 && y == 0){
-                gamefield[x][y].neighborCell1 = &gamefield[X_value-1][Y_value-1];
+                gamefield[x][y].neighborCell1 = &gamefield[X_Size-1][Y_Size-1];
             }
 
-            if (x == 0 && y == Y_value-1){
-                gamefield[x][y].neighborCell6 = &gamefield[X_value-1][0];
+            if (x == 0 && y == Y_Size-1){
+                gamefield[x][y].neighborCell6 = &gamefield[X_Size-1][0];
             }
 
-            if (x == X_value-1 && y == 0){
-                gamefield[x][y].neighborCell3 = &gamefield[0][Y_value-1];
+            if (x == X_Size-1 && y == 0){
+                gamefield[x][y].neighborCell3 = &gamefield[0][Y_Size-1];
             }
 
-            if (x == X_value-1 && y == Y_value-1){
+            if (x == X_Size-1 && y == Y_Size-1){
                 gamefield[x][y].neighborCell8 = &gamefield[0][0];
             }
         }
@@ -121,8 +123,8 @@ void define_neighborhoodcopy(){
     //nachbarn eintragen
 
     int x, y;
-    for(y = 0; y < Y_value; y++){
-        for(x = 0; x < X_value; x++){
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
 
             gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[x-1][y-1];
             gamefieldcopy[x][y].neighborCell2 = &gamefieldcopy[x][y-1];
@@ -137,21 +139,21 @@ void define_neighborhoodcopy(){
             gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[x+1][y+1];
 
             if (x == 0) {
-                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_value-1][y-1];
-                gamefieldcopy[x][y].neighborCell4 = &gamefieldcopy[X_value-1][y];
-                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_value-1][y+1];
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_Size-1][y-1];
+                gamefieldcopy[x][y].neighborCell4 = &gamefieldcopy[X_Size-1][y];
+                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_Size-1][y+1];
             }
             if (y == 0) {
-                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[x-1][Y_value-1];
-                gamefieldcopy[x][y].neighborCell2 = &gamefieldcopy[x][Y_value-1];
-                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[x+1][Y_value-1];
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[x-1][Y_Size-1];
+                gamefieldcopy[x][y].neighborCell2 = &gamefieldcopy[x][Y_Size-1];
+                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[x+1][Y_Size-1];
             }
-            if (x == X_value-1) {
+            if (x == X_Size-1) {
                 gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[0][y-1];
                 gamefieldcopy[x][y].neighborCell5 = &gamefieldcopy[0][y];
                 gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[0][y+1];
             }
-            if (y == Y_value-1) {
+            if (y == Y_Size-1) {
                 gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[x-1][0];
                 gamefieldcopy[x][y].neighborCell7 = &gamefieldcopy[x][0];
                 gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[x+1][0];
@@ -159,18 +161,18 @@ void define_neighborhoodcopy(){
             }
 
             if (x == 0 && y == 0){
-                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_value-1][Y_value-1];
+                gamefieldcopy[x][y].neighborCell1 = &gamefieldcopy[X_Size-1][Y_Size-1];
             }
 
-            if (x == 0 && y == Y_value-1){
-                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_value-1][0];
+            if (x == 0 && y == Y_Size-1){
+                gamefieldcopy[x][y].neighborCell6 = &gamefieldcopy[X_Size-1][0];
             }
 
-            if (x == X_value-1 && y == 0){
-                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[0][Y_value-1];
+            if (x == X_Size-1 && y == 0){
+                gamefieldcopy[x][y].neighborCell3 = &gamefieldcopy[0][Y_Size-1];
             }
 
-            if (x == X_value-1 && y == Y_value-1){
+            if (x == X_Size-1 && y == Y_Size-1){
                 gamefieldcopy[x][y].neighborCell8 = &gamefieldcopy[0][0];
             }
         }
@@ -181,12 +183,12 @@ void define_neighborhoodcopy(){
 void print_gamestate(){
     int x, y;
 
-    for(y = 0; y < Y_value; y++){
-        for(x = 0; x < X_value; x++){
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
             if (gamefield[x][y].alive == 1) {
-                printf("X ");
+                printf("%c ", symbolTrue);
             }else {
-                printf("_ ");
+                printf("%c ", symbolFalse);
             }
         }
         printf("\n");
@@ -203,8 +205,8 @@ void save_preset(){
         int x;
         int y;
 
-        for(y = 0; y < Y_value; y++){
-            for(x = 0; x < X_value; x++){
+        for(y = 0; y < Y_Size; y++){
+            for(x = 0; x < X_Size; x++){
                 fprintf(fp,"%i ",gamefield[x][y].alive);
             }
             fprintf(fp,"\n");
@@ -223,8 +225,8 @@ void load_preset(){
     if(fp == NULL) {
         printf("Datei konnte nicht geoeffnet werden.\n");
     }else {
-        for(y = 0; y < Y_value; y++){
-            for(x = 0; x < X_value; x++){
+        for(y = 0; y < Y_Size; y++){
+            for(x = 0; x < X_Size; x++){
                 fscanf(fp, "%d ", &tempalive);
                 gamefield[x][y].alive = tempalive;
             }
@@ -259,8 +261,8 @@ void tick(){
     int x;
     int y;
 
-    for(y = 0; y < Y_value; y++){
-        for(x = 0; x < X_value; x++){
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
             //CountLivingNeighbors();
             int CountLivingNeighbors = 0;
             if(gamefieldcopy[x][y].neighborCell1 -> alive == 1){
@@ -312,13 +314,19 @@ void tick(){
 }
 
 int main(){
+    symbolTrue = 'X';
+    symbolFalse = '-';
+
+    int iterationsPerSecond = 10;
+    int gameTime = 10;
+
     initialize_game();
     //save_preset();
     load_preset();
 
     print_gamestate();
 
-    run_game(10, 10);
+    run_game(gameTime, iterationsPerSecond);
 
 
     return 0;
