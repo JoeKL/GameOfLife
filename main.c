@@ -47,9 +47,11 @@ void define_neighborhood(){
     */
 
     //nachbarn eintragen
+    // 0, 2
     int x, y;
     for(y = 0; y < Y_value; y++){
         for(x = 0; x < X_value; x++){
+
             gamefield[x][y].neighborCell1 = &gamefield[x-1][y-1];
             gamefield[x][y].neighborCell2 = &gamefield[x][y-1];
 
@@ -62,6 +64,43 @@ void define_neighborhood(){
             gamefield[x][y].neighborCell7 = &gamefield[x][y+1];
             gamefield[x][y].neighborCell8 = &gamefield[x+1][y+1];
 
+            if (x == 0) {
+                gamefield[x][y].neighborCell1 = &gamefield[X_value-1][y-1];
+                gamefield[x][y].neighborCell4 = &gamefield[X_value-1][y];
+                gamefield[x][y].neighborCell6 = &gamefield[X_value-1][y+1];
+            }
+            if (y == 0) {
+                gamefield[x][y].neighborCell1 = &gamefield[x-1][Y_value-1];
+                gamefield[x][y].neighborCell2 = &gamefield[x][Y_value-1];
+                gamefield[x][y].neighborCell3 = &gamefield[x+1][Y_value-1];
+            }
+            if (x == X_value-1) {
+                gamefield[x][y].neighborCell3 = &gamefield[0][y-1];
+                gamefield[x][y].neighborCell5 = &gamefield[0][y];
+                gamefield[x][y].neighborCell8 = &gamefield[0][y+1];
+            }
+            if (y == Y_value-1) {
+                gamefield[x][y].neighborCell6 = &gamefield[x-1][0];
+                gamefield[x][y].neighborCell7 = &gamefield[x][0];
+                gamefield[x][y].neighborCell8 = &gamefield[x+1][0];
+
+            }
+
+            if (x == 0 && y == 0){
+                gamefield[x][y].neighborCell1 = &gamefield[X_value-1][Y_value-1];
+            }
+
+            if (x == 0 && y == Y_value-1){
+                gamefield[x][y].neighborCell6 = &gamefield[X_value-1][0];
+            }
+
+            if (x == X_value-1 && y == 0){
+                gamefield[x][y].neighborCell3 = &gamefield[0][Y_value-1];
+            }
+
+            if (x == X_value-1 && y == Y_value-1){
+                gamefield[x][y].neighborCell8 = &gamefield[0][0];
+            }
         }
     }
 }
@@ -119,15 +158,26 @@ void load_preset(){
 
 
 
-int main()
-{
+int main(){
     initialize_game();
     //save_preset();
     load_preset();
 
-    //print_gamestate();
+    print_gamestate();
 
-    printf("\nnachbar 1: %d", gamefield[2][2].neighborCell2 -> neighborCell1 -> alive);
+    printf("\n");
+
+    int x_test = 4;
+    int y_test = 4;
+    printf("%d\t", gamefield[x_test][y_test].neighborCell1 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].neighborCell2 -> alive);
+    printf("%d\n", gamefield[x_test][y_test].neighborCell3 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].neighborCell4 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].alive);
+    printf("%d\n", gamefield[x_test][y_test].neighborCell5 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].neighborCell6 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].neighborCell7 -> alive);
+    printf("%d\t", gamefield[x_test][y_test].neighborCell8 -> alive);
 
     return 0;
 }
