@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1589893535 source:c:\users\ntepe\onedrive - sievers-group\berufsschule-snc-nb-765\gameoflife\main.c
+1589905631 source:c:\users\ntepe\onedrive - sievers-group\berufsschule-snc-nb-765\gameoflife\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
