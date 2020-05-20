@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
+#include <string.h>
 
 #define X_Size 100
 #define Y_Size 50
@@ -13,7 +15,7 @@ struct cell{
 char symbolTrue, symbolFalse;
 struct cell gamefield[X_Size][Y_Size];
 struct cell gamefieldcopy[X_Size][Y_Size];
-int performance = 0;
+int generation = 1;
 
 
 void initialize_game(){
@@ -173,22 +175,36 @@ void define_neighborhoodcopy(){
 
 
 void print_gamestate(){
-    char buffer[sizeof(char)*X_Size*Y_Size*3];
+    set_cursor(0,0);
+    char buffer[sizeof(char)*X_Size*Y_Size*2+Y_Size];
     int x, y;
 
     for(y = 0; y < Y_Size; y++){
         for(x = 0; x < X_Size; x++){
             if (gamefield[x][y].alive == 1) {
-                snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolTrue);
+
+                if(x == 0 && y == 0){
+                    snprintf(buffer, sizeof(buffer),"%c ", symbolTrue);
+                } else {
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolTrue);
+                }
+
             }else {
-                snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolFalse);
+
+                if(x == 0 && y == 0){
+                    snprintf(buffer, sizeof(buffer),"%c ", symbolFalse);
+                } else {
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolFalse);
+                }
             }
         }
         snprintf(buffer + strlen(buffer), sizeof(buffer),"\n");
     }
     printf("%s\n", buffer);
-    fflush(buffer);
+    printf("generation: %d", generation);
+    set_cursor(0,0);
 }
+
 
 void save_preset(){
     FILE *fp;
@@ -292,17 +308,28 @@ void tick(){
             }
         }
     }
-    system("cls");
+
     print_gamestate();
-    performance++;
+
+    //printf("generation: %d", generation);
+    generation++;
+}
+
+int set_cursor(int x, int y)
+{
+    COORD koordinaten;
+    koordinaten.X= x;
+    koordinaten.Y= y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), koordinaten);
+    return 0;
 }
 
 int main(){
-    symbolTrue = 'O';
-    symbolFalse = '-';
+    symbolTrue = '#';
+    symbolFalse = ' ';
 
     int iterationsPerSecond = 60;
-    int gameTime = 10;
+    int gameTime = 500;
 
 
     initialize_game();
@@ -310,10 +337,9 @@ int main(){
     load_preset();
 
 
-    //print_gamestate();
+    print_gamestate();
 
     run_game(gameTime, iterationsPerSecond);
-    printf("%d", performance);
-    
+
     return 0;
 }
