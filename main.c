@@ -286,7 +286,7 @@ void tick(){
             if (gamefieldcopy[x][y].alive == 1 && (LivingNeighbors == 2 || LivingNeighbors == 3)) {
                     gamefield[x][y].alive = 1;
             }
-            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
+            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  ÃœberbevÃ¶lkerung.
             if (gamefieldcopy[x][y].alive == 1 && LivingNeighbors > 3) {
                     gamefield[x][y].alive = 0;
             }
@@ -314,6 +314,6 @@ int main(){
 
     run_game(gameTime, iterationsPerSecond);
     printf("%d", performance);
-
+    //test
     return 0;
 }
