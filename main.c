@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-#include <fcntl.h>
 #include <stdint.h>
+#include <conio.h>
 
 #define X_Size 100
 #define Y_Size 50
@@ -264,7 +264,15 @@ void run_game(int gameLengthInSenconds, int ticksPerSecond){
             cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
         } while(cpu_time_used < (double) 1/ticksPerSecond);
+
         tick();
+
+        if ( _kbhit() ){
+            char key_code = _getch();
+            if(key_code == 'b'){
+               return;
+            }
+        }
     }
 }
 
@@ -311,15 +319,14 @@ void tick(){
             }
         }
     }
-
     print_gamestate();
 
     //printf("generation: %d", generation);
     generation++;
 }
 
-int set_cursor(int x, int y)
-{
+int set_cursor(int x, int y){
+    // https://docs.microsoft.com/en-us/windows/console/console-functions
     COORD koordinaten;
     koordinaten.X= x;
     koordinaten.Y= y;
@@ -327,7 +334,7 @@ int set_cursor(int x, int y)
     return 0;
 }
 
-int msws() {
+int msws(){
     //Middle Square Weyl Sequence PRNG
     x_msws *= x_msws;
     x_msws += (w_msws += s_msws);
@@ -348,18 +355,21 @@ int main(){
     //setze den rand() seed auf Sekunden seit Epoche
     srand(time(NULL));
 
-    symbolTrue = '#';
-    symbolFalse = ' ';
+    system("chcp 437");
 
-    int iterationsPerSecond = 60;
-    int gameTime = 500;
+
+    symbolTrue = ' ';
+    symbolFalse = '\xb0';
+
+    int iterationsPerSecond = 71;
+    int gameTime = 1;
 
 
     initialize_game();
 
-    //random_gamefield();
+    random_gamefield();
     //save_preset();
-    load_preset();
+    //load_preset();
 
 
     print_gamestate();
