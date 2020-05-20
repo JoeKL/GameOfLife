@@ -2,3 +2,7 @@
 *.exe
 *.depend
 *.o
+bin/Debug/GameOfLife.exe
+GameOfLife.depend
+obj/Debug/main.o
+preset.txt

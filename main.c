@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-#include <string.h>
+#include <fcntl.h>
+#include <stdint.h>
 
 #define X_Size 100
 #define Y_Size 50
@@ -17,6 +18,8 @@ struct cell gamefield[X_Size][Y_Size];
 struct cell gamefieldcopy[X_Size][Y_Size];
 int generation = 1;
 
+//seed für Zufallsgenerator
+uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
 
 void initialize_game(){
 
@@ -324,7 +327,27 @@ int set_cursor(int x, int y)
     return 0;
 }
 
+int msws() {
+    //Middle Square Weyl Sequence PRNG
+    x_msws *= x_msws;
+    x_msws += (w_msws += s_msws);
+    return x_msws = (x_msws>>32) | (x_msws<<32);
+}
+
+void random_gamefield(){
+    int x, y;
+
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
+            gamefield[x][y].alive = ((unsigned)msws())*rand() % 2;
+        }
+    }
+}
+
 int main(){
+    //setze den rand() seed auf Sekunden seit Epoche
+    srand(time(NULL));
+
     symbolTrue = '#';
     symbolFalse = ' ';
 
@@ -333,6 +356,8 @@ int main(){
 
 
     initialize_game();
+
+    //random_gamefield();
     //save_preset();
     load_preset();
 

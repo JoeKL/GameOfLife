@@ -4,10 +4,11 @@
 	<stdlib.h>
 	<time.h>
 
-1589995399 source:c:\users\ntepe\documents\github\gameoflife\main.c
+1590001180 source:c:\users\ntepe\documents\github\gameoflife\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	<windows.h>
-	<string.h>
+	<fcntl.h>
+	<stdint.h>
 
