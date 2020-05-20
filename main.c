@@ -314,6 +314,6 @@ int main(){
 
     run_game(gameTime, iterationsPerSecond);
     printf("%d", performance);
-    //test
+    
     return 0;
 }
