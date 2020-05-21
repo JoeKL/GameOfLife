@@ -16,23 +16,26 @@ struct cell{
 
 struct settings{
 
-    char symbolTrue;
-    char symbolFalse;
+    char symbolAlive;
+    char symbolDead;
 
     int gameTime;
     int iterationsPerSecond;
 
-    int generation_pos_y;
     int generation_pos_x;
+    int generation_pos_y;
     
-    int gameFieldSize_pos_y;
     int gameFieldSize_pos_x;
+    int gameFieldSize_pos_y;
 
-    int gameTime_pos_y;
     int gameTime_pos_x;
+    int gameTime_pos_y;
 
-    int iterationsPerSecond_pos_y;
     int iterationsPerSecond_pos_x;
+    int iterationsPerSecond_pos_y;
+
+    int aliveCells_pos_x;
+    int aliveCells_pos_y;
 
 } gamesettings;
 
@@ -41,6 +44,7 @@ struct settings{
 uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
 struct cell gamefield[X_Size][Y_Size];
 struct cell gamefieldcopy[X_Size][Y_Size];
+int aliveCells = 0;
 int generation = 0;
 
 
@@ -70,22 +74,25 @@ int main(){
 
     gamesettings.generation_pos_x = 10;
     gamesettings.generation_pos_y = 51;
-    gamesettings.gameFieldSize_pos_x = 10;
-    gamesettings.gameFieldSize_pos_y = 52;
+    gamesettings.aliveCells_pos_x = 10;
+    gamesettings.aliveCells_pos_y = 52;
     gamesettings.gameTime_pos_x = 50;
     gamesettings.gameTime_pos_y = 51;
     gamesettings.iterationsPerSecond_pos_x = 50;
     gamesettings.iterationsPerSecond_pos_y = 52;
+    gamesettings.gameFieldSize_pos_x = 50;
+    gamesettings.gameFieldSize_pos_y = 53;
 
-    gamesettings.symbolTrue = '#';
-    gamesettings.symbolFalse = '-';
+    gamesettings.symbolAlive = '#';
+    gamesettings.symbolDead = '-';
     gamesettings.iterationsPerSecond = 60;
-    gamesettings.gameTime = 5;
+    gamesettings.gameTime = 20;
 
 
     initialize_game();
 
     generate_random_gamefield();
+
     //save_preset();
     //load_preset();    
 
@@ -200,17 +207,17 @@ void print_gamestate(){
             if (gamefield[x][y].alive == 1) {
 
                 if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolTrue);
+                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolAlive);
                 } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolTrue);
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolAlive);
                 }
 
             }else {
 
                 if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolFalse);
+                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolDead);
                 } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolFalse);
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolDead);
                 }
             }
         }
@@ -263,6 +270,7 @@ void load_preset(){
 }
 
 void tick(){
+    aliveCells = 0;
     memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
     define_neighborhood(gamefieldcopy);
 
@@ -271,6 +279,7 @@ void tick(){
 
     for(y = 0; y < Y_Size; y++){
         for(x = 0; x < X_Size; x++){
+            if (gamefield[x][y].alive) aliveCells++;
 
             int LivingNeighbors = CountLivingNeighbors(x, y);
 
@@ -330,7 +339,10 @@ void run_game(int gameLengthInSenconds, int ticksPerSecond){
 void draw_hud(){
     
     set_cursor(gamesettings.generation_pos_x, gamesettings.generation_pos_y);
-    printf("generation: %d", generation);
+    printf("generation: %d of %d", generation, gamesettings.iterationsPerSecond*gamesettings.gameTime);
+
+    set_cursor(gamesettings.aliveCells_pos_x, gamesettings.aliveCells_pos_y);
+    printf("cells alive: %d of %d", aliveCells, X_Size*Y_Size);
     
     set_cursor(gamesettings.gameFieldSize_pos_x, gamesettings.gameFieldSize_pos_y);
     printf("gamefield size: %dx%d", X_Size, Y_Size);
