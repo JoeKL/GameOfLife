@@ -28,8 +28,7 @@ void tick();
 void load_preset();
 void save_preset();
 void print_gamestate();
-void define_neighborhoodcopy();
-void define_neighborhood();
+void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]);
 void initialize_game();
 int set_cursor(int x, int y);
 int msws();
@@ -39,14 +38,14 @@ int main(){
     //setze den rand() seed auf Sekunden seit Epoche
     srand(time(NULL));
 
-    system("chcp 437");
+    //system("chcp 437");
 
 
-    symbolTrue = ' ';
-    symbolFalse = '\xb0';
+    symbolTrue = '#';
+    symbolFalse = '-';
 
-    int iterationsPerSecond = 71;
-    int gameTime = 1;
+    int iterationsPerSecond = 60;
+    int gameTime = 5;
 
 
     initialize_game();
@@ -76,12 +75,12 @@ void initialize_game(){
         }
     }
 
-    define_neighborhood();
+    define_neighborhood(gamefield);
 
     //preset laden
 }
 
-void define_neighborhood(){
+void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]){
 
     /*
         Nachbar wird wie folgt definiert:
@@ -97,129 +96,58 @@ void define_neighborhood(){
     for(y = 0; y < Y_Size; y++){
         for(x = 0; x < X_Size; x++){
 
-            gamefield[x][y].neighborCell[0] = &gamefield[x-1][y-1];
-            gamefield[x][y].neighborCell[1] = &gamefield[x][y-1];
+            gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][y-1];
+            gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][y-1];
 
-            gamefield[x][y].neighborCell[2] = &gamefield[x+1][y-1];
-            gamefield[x][y].neighborCell[3] = &gamefield[x-1][y];
+            gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][y-1];
+            gamefield_ptr[x][y].neighborCell[3] = &gamefield_ptr[x-1][y];
 
-            gamefield[x][y].neighborCell[4] = &gamefield[x+1][y];
-            gamefield[x][y].neighborCell[5] = &gamefield[x-1][y+1];
+            gamefield_ptr[x][y].neighborCell[4] = &gamefield_ptr[x+1][y];
+            gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[x-1][y+1];
 
-            gamefield[x][y].neighborCell[6] = &gamefield[x][y+1];
-            gamefield[x][y].neighborCell[7] = &gamefield[x+1][y+1];
+            gamefield_ptr[x][y].neighborCell[6] = &gamefield_ptr[x][y+1];
+            gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[x+1][y+1];
 
             if (x == 0) {
-                gamefield[x][y].neighborCell[0] = &gamefield[X_Size-1][y-1];
-                gamefield[x][y].neighborCell[3] = &gamefield[X_Size-1][y];
-                gamefield[x][y].neighborCell[5] = &gamefield[X_Size-1][y+1];
+                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[X_Size-1][y-1];
+                gamefield_ptr[x][y].neighborCell[3] = &gamefield_ptr[X_Size-1][y];
+                gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[X_Size-1][y+1];
             }
             if (y == 0) {
-                gamefield[x][y].neighborCell[0] = &gamefield[x-1][Y_Size-1];
-                gamefield[x][y].neighborCell[1] = &gamefield[x][Y_Size-1];
-                gamefield[x][y].neighborCell[2] = &gamefield[x+1][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][Y_Size-1];
             }
             if (x == X_Size-1) {
-                gamefield[x][y].neighborCell[2] = &gamefield[0][y-1];
-                gamefield[x][y].neighborCell[4] = &gamefield[0][y];
-                gamefield[x][y].neighborCell[7] = &gamefield[0][y+1];
+                gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[0][y-1];
+                gamefield_ptr[x][y].neighborCell[4] = &gamefield_ptr[0][y];
+                gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[0][y+1];
             }
             if (y == Y_Size-1) {
-                gamefield[x][y].neighborCell[5] = &gamefield[x-1][0];
-                gamefield[x][y].neighborCell[6] = &gamefield[x][0];
-                gamefield[x][y].neighborCell[7] = &gamefield[x+1][0];
+                gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[x-1][0];
+                gamefield_ptr[x][y].neighborCell[6] = &gamefield_ptr[x][0];
+                gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[x+1][0];
 
             }
 
             if (x == 0 && y == 0){
-                gamefield[x][y].neighborCell[0] = &gamefield[X_Size-1][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[X_Size-1][Y_Size-1];
             }
 
             if (x == 0 && y == Y_Size-1){
-                gamefield[x][y].neighborCell[5] = &gamefield[X_Size-1][0];
+                gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[X_Size-1][0];
             }
 
             if (x == X_Size-1 && y == 0){
-                gamefield[x][y].neighborCell[2] = &gamefield[0][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[0][Y_Size-1];
             }
 
             if (x == X_Size-1 && y == Y_Size-1){
-                gamefield[x][y].neighborCell[7] = &gamefield[0][0];
+                gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[0][0];
             }
         }
     }
 }
-
-
-void define_neighborhoodcopy(){
-
-    /*
-        Nachbar wird wie folgt definiert:
-
-                    1|2|3
-                    4| |5
-                    6|7|8
-    */
-
-    //nachbarn eintragen
-
-    int x, y;
-    for(y = 0; y < Y_Size; y++){
-        for(x = 0; x < X_Size; x++){
-
-            gamefieldcopy[x][y].neighborCell[0] = &gamefieldcopy[x-1][y-1];
-            gamefieldcopy[x][y].neighborCell[1] = &gamefieldcopy[x][y-1];
-
-            gamefieldcopy[x][y].neighborCell[2] = &gamefieldcopy[x+1][y-1];
-            gamefieldcopy[x][y].neighborCell[3] = &gamefieldcopy[x-1][y];
-
-            gamefieldcopy[x][y].neighborCell[4] = &gamefieldcopy[x+1][y];
-            gamefieldcopy[x][y].neighborCell[5] = &gamefieldcopy[x-1][y+1];
-
-            gamefieldcopy[x][y].neighborCell[6] = &gamefieldcopy[x][y+1];
-            gamefieldcopy[x][y].neighborCell[7] = &gamefieldcopy[x+1][y+1];
-
-            if (x == 0) {
-                gamefieldcopy[x][y].neighborCell[0] = &gamefieldcopy[X_Size-1][y-1];
-                gamefieldcopy[x][y].neighborCell[3] = &gamefieldcopy[X_Size-1][y];
-                gamefieldcopy[x][y].neighborCell[5] = &gamefieldcopy[X_Size-1][y+1];
-            }
-            if (y == 0) {
-                gamefieldcopy[x][y].neighborCell[0] = &gamefieldcopy[x-1][Y_Size-1];
-                gamefieldcopy[x][y].neighborCell[1] = &gamefieldcopy[x][Y_Size-1];
-                gamefieldcopy[x][y].neighborCell[2] = &gamefieldcopy[x+1][Y_Size-1];
-            }
-            if (x == X_Size-1) {
-                gamefieldcopy[x][y].neighborCell[2] = &gamefieldcopy[0][y-1];
-                gamefieldcopy[x][y].neighborCell[4] = &gamefieldcopy[0][y];
-                gamefieldcopy[x][y].neighborCell[7] = &gamefieldcopy[0][y+1];
-            }
-            if (y == Y_Size-1) {
-                gamefieldcopy[x][y].neighborCell[5] = &gamefieldcopy[x-1][0];
-                gamefieldcopy[x][y].neighborCell[6] = &gamefieldcopy[x][0];
-                gamefieldcopy[x][y].neighborCell[7] = &gamefieldcopy[x+1][0];
-
-            }
-
-            if (x == 0 && y == 0){
-                gamefieldcopy[x][y].neighborCell[0] = &gamefieldcopy[X_Size-1][Y_Size-1];
-            }
-
-            if (x == 0 && y == Y_Size-1){
-                gamefieldcopy[x][y].neighborCell[5] = &gamefieldcopy[X_Size-1][0];
-            }
-
-            if (x == X_Size-1 && y == 0){
-                gamefieldcopy[x][y].neighborCell[2] = &gamefieldcopy[0][Y_Size-1];
-            }
-
-            if (x == X_Size-1 && y == Y_Size-1){
-                gamefieldcopy[x][y].neighborCell[7] = &gamefieldcopy[0][0];
-            }
-        }
-    }
-}
-
 
 void print_gamestate(){
     set_cursor(0,0);
@@ -295,7 +223,7 @@ void load_preset(){
 
 void tick(){
     memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
-    define_neighborhoodcopy();
+    define_neighborhood(gamefieldcopy);
 
     int x;
     int y;
