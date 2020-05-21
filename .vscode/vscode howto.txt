@@ -1,0 +1,20 @@
+
+How-To VSCode C/C++
+
+1. VSCode herunterladen
+
+Optional: VSCode portable setzen (damit es sich nicht mit anderen VSCode Versionen beißt) (https://code.visualstudio.com/docs/editor/portable)
+
+2. MinGW installieren (https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+
+3. Path auf bin in Systemvariablen setzen
+
+4. Extension: "C/C++" (von Microsoft) herunterladen
+
+5. Projektordner öffnen
+
+fertig!
+
+Weitere Hilfen:
+https://code.visualstudio.com/docs/cpp/config-mingw
+https://www.youtube.com/watch?v=DIw02CaEusY
