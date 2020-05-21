@@ -8,25 +8,48 @@
 #define X_Size 100
 #define Y_Size 50
 
+//structs
 struct cell{
     int alive;
     struct cell *neighborCell[8];
 };
 
+struct settings{
+
+    char symbolTrue;
+    char symbolFalse;
+
+    int gameTime;
+    int iterationsPerSecond;
+
+    int generation_pos_y;
+    int generation_pos_x;
+    
+    int gameFieldSize_pos_y;
+    int gameFieldSize_pos_x;
+
+    int gameTime_pos_y;
+    int gameTime_pos_x;
+
+    int iterationsPerSecond_pos_y;
+    int iterationsPerSecond_pos_x;
+
+} gamesettings;
+
+//Variablen
 //seed für Zufallsgenerator
 uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
-char symbolTrue, symbolFalse;
 struct cell gamefield[X_Size][Y_Size];
 struct cell gamefieldcopy[X_Size][Y_Size];
-int generation = 1;
+int generation = 0;
 
 
+//Funktionen
 int CountLivingNeighbors(int x, int y);
 void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]);
 
-
 void initialize_game();
-void random_gamefield();
+void generate_random_gamefield();
 void load_preset();
 void save_preset();
 
@@ -34,8 +57,9 @@ void run_game(int gameLengthInSenconds, int ticksPerSecond);
 void tick();
 
 void print_gamestate();
+void draw_hud();
 int set_cursor(int x, int y);
-int msws();
+unsigned int generate_random_int_msws();
 
 
 int main(){
@@ -44,24 +68,31 @@ int main(){
 
     //system("chcp 437");
 
+    gamesettings.generation_pos_x = 10;
+    gamesettings.generation_pos_y = 51;
+    gamesettings.gameFieldSize_pos_x = 10;
+    gamesettings.gameFieldSize_pos_y = 52;
+    gamesettings.gameTime_pos_x = 50;
+    gamesettings.gameTime_pos_y = 51;
+    gamesettings.iterationsPerSecond_pos_x = 50;
+    gamesettings.iterationsPerSecond_pos_y = 52;
 
-    symbolTrue = '#';
-    symbolFalse = '-';
-
-    int iterationsPerSecond = 60;
-    int gameTime = 5;
+    gamesettings.symbolTrue = '#';
+    gamesettings.symbolFalse = '-';
+    gamesettings.iterationsPerSecond = 60;
+    gamesettings.gameTime = 5;
 
 
     initialize_game();
 
-    random_gamefield();
+    generate_random_gamefield();
     //save_preset();
-    //load_preset();
+    //load_preset();    
 
 
     print_gamestate();
 
-    run_game(gameTime, iterationsPerSecond);
+    run_game(gamesettings.gameTime, gamesettings.iterationsPerSecond);
 
     system("pause");
     return 0;
@@ -69,7 +100,6 @@ int main(){
 
 
 void initialize_game(){
-
     int x, y;
 
     //erzeugen des leeren Feldes
@@ -80,7 +110,6 @@ void initialize_game(){
     }
 
     define_neighborhood(gamefield);
-    //preset laden
 }
 
 void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]){
@@ -163,7 +192,7 @@ void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]){
 }
 
 void print_gamestate(){
-    set_cursor(0,0);
+
     char buffer[sizeof(char)*X_Size*Y_Size*2+Y_Size];
 
     for(int y = 0; y < Y_Size; y++){
@@ -171,24 +200,24 @@ void print_gamestate(){
             if (gamefield[x][y].alive == 1) {
 
                 if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", symbolTrue);
+                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolTrue);
                 } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolTrue);
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolTrue);
                 }
 
             }else {
 
                 if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", symbolFalse);
+                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolFalse);
                 } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", symbolFalse);
+                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolFalse);
                 }
             }
         }
         snprintf(buffer + strlen(buffer), sizeof(buffer),"\n");
     }
+    set_cursor(0,0);
     printf("%s\n", buffer);
-    printf("generation: %d", generation);
     set_cursor(0,0);
 }
 
@@ -232,7 +261,6 @@ void load_preset(){
 	fclose(fp);
     }
 }
-
 
 void tick(){
     memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
@@ -288,14 +316,33 @@ void run_game(int gameLengthInSenconds, int ticksPerSecond){
         } while(cpu_time_used < (double) 1/ticksPerSecond);
 
         tick();
+        draw_hud();
 
-        if ( _kbhit() ){
-            char key_code = _getch();
-            if(key_code == 'b'){
-               return;
-            }
-        }
+        // if ( _kbhit() ){
+        //     char key_code = _getch();
+        //     if(key_code == ' '){
+        //        return;
+        //     }
+        // }
     }
+}
+
+void draw_hud(){
+    
+    set_cursor(gamesettings.generation_pos_x, gamesettings.generation_pos_y);
+    printf("generation: %d", generation);
+    
+    set_cursor(gamesettings.gameFieldSize_pos_x, gamesettings.gameFieldSize_pos_y);
+    printf("gamefield size: %dx%d", X_Size, Y_Size);
+
+    set_cursor(gamesettings.gameTime_pos_x, gamesettings.gameTime_pos_y);
+    printf("gametime: %ds", gamesettings.gameTime);
+
+    set_cursor(gamesettings.iterationsPerSecond_pos_x, gamesettings.iterationsPerSecond_pos_y);
+    printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
+
+
+    set_cursor(0,0);
 }
 
 int CountLivingNeighbors(int x, int y){
@@ -319,19 +366,22 @@ int set_cursor(int x, int y){
     return 0;
 }
 
-int msws(){
+unsigned int generate_random_int_msws(){
     //Middle Square Weyl Sequence PRNG
     x_msws *= x_msws;
     x_msws += (w_msws += s_msws);
-    return x_msws = (x_msws>>32) | (x_msws<<32);
+    //  >>    Bitmanipulation rechts
+    //  <<    Bitmanipulation links
+    //  |     Bitweises OR
+    return (unsigned) (x_msws = (x_msws>>32) | (x_msws<<32));
 }
 
-void random_gamefield(){
+void generate_random_gamefield(){
     int x, y;
 
     for(y = 0; y < Y_Size; y++){
         for(x = 0; x < X_Size; x++){
-            gamefield[x][y].alive = ((unsigned)msws())*rand() % 2;
+            gamefield[x][y].alive = generate_random_int_msws()*rand() % 2;
         }
     }
 }
