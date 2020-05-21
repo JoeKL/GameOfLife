@@ -13,26 +13,30 @@ struct cell{
     struct cell *neighborCell[8];
 };
 
+//seed für Zufallsgenerator
+uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
 char symbolTrue, symbolFalse;
 struct cell gamefield[X_Size][Y_Size];
 struct cell gamefieldcopy[X_Size][Y_Size];
 int generation = 1;
 
-//seed für Zufallsgenerator
-uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
-
 
 int CountLivingNeighbors(int x, int y);
-void run_game(int gameLengthInSenconds, int ticksPerSecond);
-void tick();
+void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]);
+
+
+void initialize_game();
+void random_gamefield();
 void load_preset();
 void save_preset();
+
+void run_game(int gameLengthInSenconds, int ticksPerSecond);
+void tick();
+
 void print_gamestate();
-void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]);
-void initialize_game();
 int set_cursor(int x, int y);
 int msws();
-void random_gamefield();
+
 
 int main(){
     //setze den rand() seed auf Sekunden seit Epoche
@@ -76,7 +80,6 @@ void initialize_game(){
     }
 
     define_neighborhood(gamefield);
-
     //preset laden
 }
 
@@ -90,39 +93,45 @@ void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]){
                     6|7|8
     */
 
-    //nachbarn eintragen
-
+    //Nachbaren eintragen
     int x, y;
     for(y = 0; y < Y_Size; y++){
         for(x = 0; x < X_Size; x++){
 
-            gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][y-1];
-            gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][y-1];
+            gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][y-1]; // Nachbar 1
+            gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][y-1]; // Nachbar 2
 
-            gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][y-1];
-            gamefield_ptr[x][y].neighborCell[3] = &gamefield_ptr[x-1][y];
+            gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][y-1]; // Nachbar 3
+            gamefield_ptr[x][y].neighborCell[3] = &gamefield_ptr[x-1][y]; // Nachbar 4
 
-            gamefield_ptr[x][y].neighborCell[4] = &gamefield_ptr[x+1][y];
-            gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[x-1][y+1];
+            gamefield_ptr[x][y].neighborCell[4] = &gamefield_ptr[x+1][y]; // Nachbar 5
+            gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[x-1][y+1]; // Nachbar 6
 
-            gamefield_ptr[x][y].neighborCell[6] = &gamefield_ptr[x][y+1];
-            gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[x+1][y+1];
+            gamefield_ptr[x][y].neighborCell[6] = &gamefield_ptr[x][y+1]; // Nachbar 7
+            gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[x+1][y+1]; // Nachbar 8
 
+            //Unsere Zelle ein Linkes Kantenfeld ist
             if (x == 0) {
-                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[X_Size-1][y-1];
+                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[X_Size-1][y-1]; 
                 gamefield_ptr[x][y].neighborCell[3] = &gamefield_ptr[X_Size-1][y];
                 gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[X_Size-1][y+1];
             }
-            if (y == 0) {
-                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][Y_Size-1];
-                gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][Y_Size-1];
-                gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][Y_Size-1];
-            }
+            
+            //Unsere Zelle ein Rechtes Kantenfeld ist
             if (x == X_Size-1) {
                 gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[0][y-1];
                 gamefield_ptr[x][y].neighborCell[4] = &gamefield_ptr[0][y];
                 gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[0][y+1];
             }
+            
+            //Unsere Zelle ein Oberes Kantenfeld ist
+            if (y == 0) {
+                gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[x-1][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[1] = &gamefield_ptr[x][Y_Size-1];
+                gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[x+1][Y_Size-1];
+            }
+            
+            //Unsere Zelle ein Unteres Kantenfeld ist
             if (y == Y_Size-1) {
                 gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[x-1][0];
                 gamefield_ptr[x][y].neighborCell[6] = &gamefield_ptr[x][0];
@@ -130,18 +139,22 @@ void define_neighborhood(struct cell gamefield_ptr[X_Size][Y_Size]){
 
             }
 
+            //Unsere Zelle ein in der Oberen Linken Ecke ist            
             if (x == 0 && y == 0){
                 gamefield_ptr[x][y].neighborCell[0] = &gamefield_ptr[X_Size-1][Y_Size-1];
             }
 
+            //Unsere Zelle ein in der Unteren Linken Ecke ist           
             if (x == 0 && y == Y_Size-1){
                 gamefield_ptr[x][y].neighborCell[5] = &gamefield_ptr[X_Size-1][0];
             }
 
+            //Unsere Zelle ein in der Oberen Rechten Ecke ist         
             if (x == X_Size-1 && y == 0){
                 gamefield_ptr[x][y].neighborCell[2] = &gamefield_ptr[0][Y_Size-1];
             }
 
+            //Unsere Zelle ein in der Unten Rechten Ecke ist      
             if (x == X_Size-1 && y == Y_Size-1){
                 gamefield_ptr[x][y].neighborCell[7] = &gamefield_ptr[0][0];
             }
