@@ -21,6 +21,50 @@ int generation = 1;
 //seed für Zufallsgenerator
 uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
 
+
+int CountLivingNeighbors(int x, int y);
+void run_game(int gameLengthInSenconds, int ticksPerSecond);
+void tick();
+void load_preset();
+void save_preset();
+void print_gamestate();
+void define_neighborhoodcopy();
+void define_neighborhood();
+void initialize_game();
+int set_cursor(int x, int y);
+int msws();
+void random_gamefield();
+
+int main(){
+    //setze den rand() seed auf Sekunden seit Epoche
+    srand(time(NULL));
+
+    system("chcp 437");
+
+
+    symbolTrue = ' ';
+    symbolFalse = '\xb0';
+
+    int iterationsPerSecond = 71;
+    int gameTime = 1;
+
+
+    initialize_game();
+
+    random_gamefield();
+    //save_preset();
+    //load_preset();
+
+
+    print_gamestate();
+
+    run_game(gameTime, iterationsPerSecond);
+
+    system("pause");
+    return 0;
+}
+
+
 void initialize_game(){
 
     int x, y;
@@ -180,10 +224,9 @@ void define_neighborhoodcopy(){
 void print_gamestate(){
     set_cursor(0,0);
     char buffer[sizeof(char)*X_Size*Y_Size*2+Y_Size];
-    int x, y;
 
-    for(y = 0; y < Y_Size; y++){
-        for(x = 0; x < X_Size; x++){
+    for(int y = 0; y < Y_Size; y++){
+        for(int x = 0; x < X_Size; x++){
             if (gamefield[x][y].alive == 1) {
 
                 if(x == 0 && y == 0){
@@ -249,6 +292,44 @@ void load_preset(){
     }
 }
 
+
+void tick(){
+    memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
+    define_neighborhoodcopy();
+
+    int x;
+    int y;
+
+    for(y = 0; y < Y_Size; y++){
+        for(x = 0; x < X_Size; x++){
+
+            int LivingNeighbors = CountLivingNeighbors(x, y);
+
+            //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
+            if(LivingNeighbors == 3 && gamefieldcopy[x][y].alive == 0){
+                gamefield[x][y].alive = 1;
+            }
+
+            //Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
+            if (gamefieldcopy[x][y].alive == 1 && LivingNeighbors < 2) {
+                    gamefield[x][y].alive = 0;
+            }
+            //Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration lebend.
+            if (gamefieldcopy[x][y].alive == 1 && (LivingNeighbors == 2 || LivingNeighbors == 3)) {
+                    gamefield[x][y].alive = 1;
+            }
+            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
+            if (gamefieldcopy[x][y].alive == 1 && LivingNeighbors > 3) {
+                    gamefield[x][y].alive = 0;
+            }
+        }
+    }
+    print_gamestate();
+
+    //printf("generation: %d", generation);
+    generation++;
+}
+
 void run_game(int gameLengthInSenconds, int ticksPerSecond){
 
     int tickCounter = 0;
@@ -288,43 +369,6 @@ int CountLivingNeighbors(int x, int y){
     return count;
 }
 
-void tick(){
-    memcpy(&gamefieldcopy, &gamefield, sizeof(gamefield));
-    define_neighborhoodcopy();
-
-    int x;
-    int y;
-
-    for(y = 0; y < Y_Size; y++){
-        for(x = 0; x < X_Size; x++){
-
-            int LivingNeighbors = CountLivingNeighbors(x, y);
-
-            //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
-            if(LivingNeighbors == 3 && gamefieldcopy[x][y].alive == 0){
-                gamefield[x][y].alive = 1;
-            }
-
-            //Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-            if (gamefieldcopy[x][y].alive == 1 && LivingNeighbors < 2) {
-                    gamefield[x][y].alive = 0;
-            }
-            //Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration lebend.
-            if (gamefieldcopy[x][y].alive == 1 && (LivingNeighbors == 2 || LivingNeighbors == 3)) {
-                    gamefield[x][y].alive = 1;
-            }
-            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
-            if (gamefieldcopy[x][y].alive == 1 && LivingNeighbors > 3) {
-                    gamefield[x][y].alive = 0;
-            }
-        }
-    }
-    print_gamestate();
-
-    //printf("generation: %d", generation);
-    generation++;
-}
-
 int set_cursor(int x, int y){
     // https://docs.microsoft.com/en-us/windows/console/console-functions
     COORD koordinaten;
@@ -349,32 +393,4 @@ void random_gamefield(){
             gamefield[x][y].alive = ((unsigned)msws())*rand() % 2;
         }
     }
-}
-
-int main(){
-    //setze den rand() seed auf Sekunden seit Epoche
-    srand(time(NULL));
-
-    system("chcp 437");
-
-
-    symbolTrue = ' ';
-    symbolFalse = '\xb0';
-
-    int iterationsPerSecond = 71;
-    int gameTime = 1;
-
-
-    initialize_game();
-
-    random_gamefield();
-    //save_preset();
-    //load_preset();
-
-
-    print_gamestate();
-
-    run_game(gameTime, iterationsPerSecond);
-
-    return 0;
 }
