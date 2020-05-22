@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
                 "C:\\mingw-w64\\i686-w64-mingw32\\include"
             ],
             "defines": [
