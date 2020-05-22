@@ -28,11 +28,6 @@ struct settings{
     COORD hud_periodInSeconds_pos;
     COORD hud_iterationsPerSecond_pos;
     COORD hud_aliveCells_pos;
-
-    COORD main_menu_start_pos;
-    COORD main_menu_settings_pos;
-    COORD main_menu_exit_pos;
-
 };
 
 unsigned int generate_random_int_msws();

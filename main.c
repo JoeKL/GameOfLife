@@ -13,7 +13,9 @@ struct settings gamesettings;
 struct cell grid[X_Size][Y_Size];
 struct cell gridcopy[X_Size][Y_Size];
 
-int aliveCells;
+struct menu_button mainMenu_Button[3];
+
+int aliveCells = 0;
 int currentGeneration = 0;
 
 void run_ticks(int periodInSeconds, int ticksPerSecond);
@@ -26,7 +28,6 @@ void main_menu();
 void init_settings();
 
 int main(){
-    
 
     console_fullscreen();
     init_settings();
@@ -52,13 +53,18 @@ void init_settings(){
     gamesettings.hud_gridSize_pos.X = 50;
     gamesettings.hud_gridSize_pos.Y = 59;
 
-    //setze mainmenu koordinaten
-    gamesettings.main_menu_start_pos.X = 50;
-    gamesettings.main_menu_start_pos.Y = 50;
-    gamesettings.main_menu_settings_pos.X = 50;
-    gamesettings.main_menu_settings_pos.Y = 50;
-    gamesettings.main_menu_exit_pos.X = 50;
-    gamesettings.main_menu_exit_pos.Y = 50;
+    //setze Main Menu Buttons
+    strcpy(mainMenu_Button[0].label, "start");
+    mainMenu_Button[0].pos.X = 10;
+    mainMenu_Button[0].pos.Y = 10;
+    
+    strcpy(mainMenu_Button[1].label, "settings");
+    mainMenu_Button[1].pos.X = 10;
+    mainMenu_Button[1].pos.Y = 12;
+
+    strcpy(mainMenu_Button[2].label, "exit");
+    mainMenu_Button[2].pos.X = 10;
+    mainMenu_Button[2].pos.Y = 14;
 
     //setze Symbol
     gamesettings.symbolAlive = '#';
@@ -159,39 +165,35 @@ void *start_random_game(void *vargp){
 
 void main_menu(){
 
-    int main_menu_cursor;
+    int main_menu_cursor_position;
 
-
-    main_menu_cursor = 0;
+    main_menu_cursor_position = 0;
 
     int run = 1;
     while (run == 1)
     {
         
-        draw_main_menu();
+        draw_main_menu(mainMenu_Button, sizeof(mainMenu_Button));
 
-        switch (main_menu_cursor)
+        switch (main_menu_cursor_position)
         {
 
             case 0:
-                erase_menu_cursors();
-                set_cursor(10-3,10);
-                printf("-->");
-                set_cursor(0,0);
+                draw_cursor(mainMenu_Button[0].pos);
+                erase_cursor(mainMenu_Button[1].pos);
+                erase_cursor(mainMenu_Button[2].pos);
                 break;
 
             case 1:
-                erase_menu_cursors();
-                set_cursor(10-3,20);
-                printf("-->");
-                set_cursor(0,0);
+                erase_cursor(mainMenu_Button[0].pos);
+                draw_cursor(mainMenu_Button[1].pos);
+                erase_cursor(mainMenu_Button[2].pos);
                 break;
             
             case 2:
-                erase_menu_cursors();
-                set_cursor(10-3,30);
-                printf("-->");
-                set_cursor(0,0);
+                erase_cursor(mainMenu_Button[0].pos);
+                erase_cursor(mainMenu_Button[1].pos);
+                draw_cursor(mainMenu_Button[2].pos);
                 break;
             
         
@@ -216,15 +218,15 @@ void main_menu(){
                 //UP
                 case 72:
                         set_cursor(0,0);
-                        // printf("u %d", main_menu_cursor);
-                        main_menu_cursor--;
+                        // printf("u %d", main_menu_cursor_position);
+                        main_menu_cursor_position--;
                     break;
 
                 //DOWN
                 case 80:
                         set_cursor(0,0);
-                        // printf("d %d", main_menu_cursor);
-                        main_menu_cursor++;
+                        // printf("d %d", main_menu_cursor_position);
+                        main_menu_cursor_position++;
                     break;
 
                 //LEFT
@@ -243,7 +245,7 @@ void main_menu(){
                 //ENTER
                 case 13:
 
-                    switch (main_menu_cursor)
+                    switch (main_menu_cursor_position)
                     {
                     case 0:
                         // run = 0;
@@ -270,12 +272,12 @@ void main_menu(){
             }
         }
         
-        if(main_menu_cursor < 0){
-            main_menu_cursor = 2;
+        if(main_menu_cursor_position < 0){
+            main_menu_cursor_position = 2;
         }
 
-        if(main_menu_cursor > 2){
-            main_menu_cursor = 0;
+        if(main_menu_cursor_position > 2){
+            main_menu_cursor_position = 0;
         }
         
     }

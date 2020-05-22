@@ -1,5 +1,6 @@
 #include "menu.h"
 
+
 int set_cursor(int x, int y){
     // https://docs.microsoft.com/en-us/windows/console/console-functions
     COORD koordinaten;
@@ -20,23 +21,23 @@ COORD get_console_window_size(HANDLE hConsoleOutput){
     return size;
 }
 
-void draw_main_menu(){
-    set_cursor(10,10);
-    printf("Start");
-    set_cursor(10,20);
-    printf("Settings");
-    set_cursor(10,30);
-    printf("Exit");
+void draw_main_menu(struct menu_button mainMenu_Button[3], int array_length){
+    for (int i = 0; i < array_length - 1; i++){
+        set_cursor(mainMenu_Button[i].pos.X,mainMenu_Button[i].pos.Y);
+        printf("%s", mainMenu_Button[i].label);
+    }
     set_cursor(0,0);
 }
 
-void erase_menu_cursors(){
-    set_cursor(10-3,10);
-                printf("   ");
-    set_cursor(10-3,20);
-                printf("   ");
-    set_cursor(10-3,30);
-                printf("   ");
+void draw_cursor(COORD cords){
+    set_cursor( cords.X - 3, cords.Y);
+    printf("-->");
+    set_cursor(0,0);
+}
+
+void erase_cursor(COORD cords){
+    set_cursor( cords.X - 3, cords.Y);
+    printf("   ");
     set_cursor(0,0);
 }
 
