@@ -39,3 +39,10 @@ void erase_menu_cursors(){
                 printf("   ");
     set_cursor(0,0);
 }
+
+void console_fullscreen(){
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleDisplayMode(consoleHandle,CONSOLE_FULLSCREEN_MODE,0);
+    COORD consoleSize = get_console_window_size(consoleHandle);
+    SetConsoleScreenBufferSize(consoleHandle, consoleSize);     
+}

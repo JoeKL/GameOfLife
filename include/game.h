@@ -18,7 +18,7 @@ struct settings{
     char symbolAlive;
     char symbolDead;
 
-    int gameTime;
+    int periodInSeconds;
     int iterationsPerSecond;
 
     int generation_pos_x;
@@ -27,8 +27,8 @@ struct settings{
     int gridSize_pos_x;
     int gridSize_pos_y;
 
-    int gameTime_pos_x;
-    int gameTime_pos_y;
+    int periodInSeconds_pos_x;
+    int periodInSeconds_pos_y;
 
     int iterationsPerSecond_pos_x;
     int iterationsPerSecond_pos_y;
@@ -39,6 +39,7 @@ struct settings{
 };
 
 unsigned int generate_random_int_msws();
+void sleep_ms(int milliseconds);
 
 void load_preset(struct cell grid_ptr[X_Size][Y_Size]);
 void save_preset(struct cell grid_ptr[X_Size][Y_Size]);
