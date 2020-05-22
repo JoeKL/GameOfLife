@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 
+//max = 117x57
 #define X_Size 117
 #define Y_Size 57
 
@@ -21,20 +23,15 @@ struct settings{
     int periodInSeconds;
     int iterationsPerSecond;
 
-    int generation_pos_x;
-    int generation_pos_y;
-    
-    int gridSize_pos_x;
-    int gridSize_pos_y;
+    COORD hud_currentGeneration_pos;  
+    COORD hud_gridSize_pos;
+    COORD hud_periodInSeconds_pos;
+    COORD hud_iterationsPerSecond_pos;
+    COORD hud_aliveCells_pos;
 
-    int periodInSeconds_pos_x;
-    int periodInSeconds_pos_y;
-
-    int iterationsPerSecond_pos_x;
-    int iterationsPerSecond_pos_y;
-
-    int aliveCells_pos_x;
-    int aliveCells_pos_y;
+    COORD main_menu_start_pos;
+    COORD main_menu_settings_pos;
+    COORD main_menu_exit_pos;
 
 };
 

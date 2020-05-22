@@ -41,16 +41,24 @@ void init_settings(){
     srand(time(NULL));
 
     //setze hud koordinaten
-    gamesettings.generation_pos_x = 10;
-    gamesettings.generation_pos_y = 57;
-    gamesettings.aliveCells_pos_x = 10;
-    gamesettings.aliveCells_pos_y = 58;
-    gamesettings.periodInSeconds_pos_x = 50;
-    gamesettings.periodInSeconds_pos_y = 57;
-    gamesettings.iterationsPerSecond_pos_x = 50;
-    gamesettings.iterationsPerSecond_pos_y = 58;
-    gamesettings.gridSize_pos_x = 50;
-    gamesettings.gridSize_pos_y = 59;
+    gamesettings.hud_currentGeneration_pos.X = 10;
+    gamesettings.hud_currentGeneration_pos.Y = 57;
+    gamesettings.hud_aliveCells_pos.X = 10;
+    gamesettings.hud_aliveCells_pos.Y = 58;
+    gamesettings.hud_periodInSeconds_pos.X = 50;
+    gamesettings.hud_periodInSeconds_pos.Y = 57;
+    gamesettings.hud_iterationsPerSecond_pos.X = 50;
+    gamesettings.hud_iterationsPerSecond_pos.Y = 58;
+    gamesettings.hud_gridSize_pos.X = 50;
+    gamesettings.hud_gridSize_pos.Y = 59;
+
+    //setze mainmenu koordinaten
+    gamesettings.main_menu_start_pos.X = 50;
+    gamesettings.main_menu_start_pos.Y = 50;
+    gamesettings.main_menu_settings_pos.X = 50;
+    gamesettings.main_menu_settings_pos.Y = 50;
+    gamesettings.main_menu_exit_pos.X = 50;
+    gamesettings.main_menu_exit_pos.Y = 50;
 
     //setze Symbol
     gamesettings.symbolAlive = '#';
@@ -122,19 +130,19 @@ void tick(){
 
 void draw_hud(){
     
-    set_cursor(gamesettings.generation_pos_x, gamesettings.generation_pos_y);
+    set_cursor(gamesettings.hud_currentGeneration_pos.X, gamesettings.hud_currentGeneration_pos.Y);
     printf("generation: %d of %d", currentGeneration, gamesettings.iterationsPerSecond*gamesettings.periodInSeconds);
 
-    set_cursor(gamesettings.aliveCells_pos_x, gamesettings.aliveCells_pos_y);
+    set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
     printf("cells alive: %d of %d", aliveCells, X_Size*Y_Size);
     
-    set_cursor(gamesettings.gridSize_pos_x, gamesettings.gridSize_pos_y);
+    set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
     printf("grid size: %dx%d", X_Size, Y_Size);
 
-    set_cursor(gamesettings.periodInSeconds_pos_x, gamesettings.periodInSeconds_pos_y);
+    set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
     printf("periodInSeconds: %ds", gamesettings.periodInSeconds);
 
-    set_cursor(gamesettings.iterationsPerSecond_pos_x, gamesettings.iterationsPerSecond_pos_y);
+    set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
     printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
 
     set_cursor(0,0);
