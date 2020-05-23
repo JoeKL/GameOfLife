@@ -34,7 +34,6 @@ struct settings{
 };
 
 uint32_t generate_random_int_msws();
-void sleep_ms(int milliseconds);
 
 void alloc_grid(struct cell *** grid_ptr, const int x_size, const int y_size);
 void dealloc_grid(struct cell *** grid_ptr, const int x_size);

@@ -4,7 +4,6 @@
 #include <windows.h>
 #include <conio.h>
 #include <pthread.h> 
-// #include <unistd.h>
 
 #include "include/menu.h"
 #include "include/game.h"
@@ -18,7 +17,9 @@ struct menu_button mainMenu_Button[3];
 struct menu_button settingsMenu_Button[5];
 
 int aliveCells = 0;
+int aliveCellsPrevGen = 0;
 int currentGeneration = 0;
+int iterationsSinceLastChange = 0;
 
 void run_ticks(int periodInSeconds, int ticksPerSecond);
 void tick();
@@ -30,7 +31,6 @@ void init_settings();
     
 
 int main(){
-
     console_fullscreen();
     init_settings();
 
@@ -95,10 +95,10 @@ void init_settings(){
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
-    gamesettings.symbolDead = '-';
+    gamesettings.symbolDead = ' ';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 240;
+    gamesettings.iterationsPerSecond = 60;
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
@@ -140,6 +140,7 @@ void tick(){
 
     for(y = 0; y < gamesettings.gridsize.Y; y++){
         for(x = 0; x < gamesettings.gridsize.X; x++){
+
             if (grid[x][y].alive) aliveCells++;
 
             int LivingNeighbors = count_living_neighbors(gridcopy, x, y);
@@ -165,6 +166,20 @@ void tick(){
     }
     print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
     currentGeneration++;
+    
+    if (aliveCellsPrevGen == aliveCells) {
+        iterationsSinceLastChange++;
+    } else {
+        iterationsSinceLastChange = 0;
+    }
+    
+
+    aliveCellsPrevGen = aliveCells;
+    
+    if (iterationsSinceLastChange >= 20){
+        printf("asdada\n");
+        system("pause");
+    }
 }
 
 void draw_hud(){
@@ -173,7 +188,7 @@ void draw_hud(){
     printf("generation: %d of %d", currentGeneration, gamesettings.iterationsPerSecond*gamesettings.periodInSeconds);
 
     set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
-    printf("cells alive: %d of %d", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.X);
+    printf("cells alive: %d of %d  ", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.Y);
     
     set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
     printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
