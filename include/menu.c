@@ -21,10 +21,10 @@ COORD get_console_window_size(HANDLE hConsoleOutput){
     return size;
 }
 
-void draw_main_menu(struct menu_button mainMenu_Button[3], int array_length){
-    for (int i = 0; i < array_length - 1; i++){
-        set_cursor(mainMenu_Button[i].pos.X,mainMenu_Button[i].pos.Y);
-        printf("%s", mainMenu_Button[i].label);
+void draw_menu(struct menu_button Menu_Button[3], int array_length){
+    for (int i = 0; i < array_length; i++){
+        set_cursor(Menu_Button[i].pos.X,Menu_Button[i].pos.Y);
+        printf("%s", Menu_Button[i].label);
     }
     set_cursor(0,0);
 }
@@ -49,4 +49,16 @@ void console_fullscreen(){
     SetConsoleDisplayMode(consoleHandle,CONSOLE_FULLSCREEN_MODE,0);
     COORD consoleSize = get_console_window_size(consoleHandle);
     SetConsoleScreenBufferSize(consoleHandle, consoleSize);     
+}
+
+void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position){
+
+        for (int i = 0; i < array_length; i++)
+        {
+            if (i == position){
+                draw_cursor(Menu_Button[i].pos);
+            } else {
+                erase_cursor(Menu_Button[i].pos);
+            }
+        }
 }

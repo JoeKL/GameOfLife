@@ -12,7 +12,8 @@ struct menu_button
 };
 
 int set_cursor(int x, int y);
-void draw_main_menu(struct menu_button mainMenu_Button[3], int array_length);
+void draw_menu(struct menu_button Menu_Button[3], int array_length);
+void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position);
 
 void erase_menu_cursors();
 void draw_cursor(COORD cords);

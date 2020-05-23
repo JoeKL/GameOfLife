@@ -14,6 +14,7 @@ struct cell grid[X_Size][Y_Size];
 struct cell gridcopy[X_Size][Y_Size];
 
 struct menu_button mainMenu_Button[3];
+struct menu_button settingsMenu_Button[5];
 
 int aliveCells = 0;
 int currentGeneration = 0;
@@ -24,6 +25,7 @@ void tick();
 void generate_random_grid(struct cell grid_ptr[X_Size][Y_Size]);
 
 void draw_hud();
+void settings_menu();
 void main_menu();
 void init_settings();
 
@@ -66,13 +68,34 @@ void init_settings(){
     mainMenu_Button[2].pos.X = 10;
     mainMenu_Button[2].pos.Y = 14;
 
-    //setze Symbol
+    //setze Settings Menu Buttons
+    strcpy(settingsMenu_Button[0].label, "currentGeneration");
+    settingsMenu_Button[0].pos.X = 24;
+    settingsMenu_Button[0].pos.Y = 10;
+    
+    strcpy(settingsMenu_Button[1].label, "aliveCells");
+    settingsMenu_Button[1].pos.X = 24;
+    settingsMenu_Button[1].pos.Y = 12;
+
+    strcpy(settingsMenu_Button[2].label, "periodInSeconds");
+    settingsMenu_Button[2].pos.X = 24;
+    settingsMenu_Button[2].pos.Y = 14;
+
+    strcpy(settingsMenu_Button[3].label, "iterationsPerSecond");
+    settingsMenu_Button[3].pos.X = 24;
+    settingsMenu_Button[3].pos.Y = 16;
+
+    strcpy(settingsMenu_Button[4].label, "gridSize");
+    settingsMenu_Button[4].pos.X = 24;
+    settingsMenu_Button[4].pos.Y = 18;
+
+    //setze Symbole
     gamesettings.symbolAlive = '#';
     gamesettings.symbolDead = '-';
 
     //setze base values
     gamesettings.iterationsPerSecond = 60;
-    gamesettings.periodInSeconds = 10;
+    gamesettings.periodInSeconds = 1;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -158,57 +181,89 @@ void *start_random_game(void *vargp){
 
     currentGeneration = 0;
     initialize_grid(grid);
+    //load_preset(grid);
     generate_random_grid(grid);
     run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
     return NULL; 
 }
 
-void main_menu(){
+void settings_menu(){
+    int settings_menu_cursor_position = 0;
 
-    int main_menu_cursor_position;
-
-    main_menu_cursor_position = 0;
-
-    int run = 1;
-    while (run == 1)
+    int refresh_menu = 1;
+    while (refresh_menu == 1)
     {
-        
-        draw_main_menu(mainMenu_Button, sizeof(mainMenu_Button));
+        draw_menu(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]));
+        set_menucursor(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), settings_menu_cursor_position);
 
-        switch (main_menu_cursor_position)
+        int ch = _getch();
+        if (ch == 0 || ch == 224)
         {
+            switch (_getch())
+            {
+                //UP
+                case 72:
+                        set_cursor(0,0);
+                        settings_menu_cursor_position--;
+                    break;
 
-            case 0:
-                draw_cursor(mainMenu_Button[0].pos);
-                erase_cursor(mainMenu_Button[1].pos);
-                erase_cursor(mainMenu_Button[2].pos);
-                break;
+                //DOWN
+                case 80:
+                        set_cursor(0,0);
+                        settings_menu_cursor_position++;
+                    break;
 
-            case 1:
-                erase_cursor(mainMenu_Button[0].pos);
-                draw_cursor(mainMenu_Button[1].pos);
-                erase_cursor(mainMenu_Button[2].pos);
-                break;
-            
-            case 2:
-                erase_cursor(mainMenu_Button[0].pos);
-                erase_cursor(mainMenu_Button[1].pos);
-                draw_cursor(mainMenu_Button[2].pos);
-                break;
-            
+            }
+        } else {
+            switch (ch)
+            {
+                //ENTER
+                case 13:
+                    switch (settings_menu_cursor_position)
+                    {
+                        case 0:
+                            
+                            break;
+                        
+                        case 1:
+                            settings_menu();
+                            break;
+                            
+                        case 2:
+                            exit(0);
+                            break;
+                    }
+
+                    break;
+                //ESC
+                case 27:
+                    refresh_menu = 0;
+                    system("cls");
+                    break;
+            }
+        }
         
-        default:
-            break;
+        if(settings_menu_cursor_position < 0){
+            settings_menu_cursor_position = 0;
         }
 
-        // int ch;
-        // while ((ch = _getch()) != 27) /* 27 = Esc key */
-        // {
-        //     printf("%d", ch);
-        //     if (ch == 0 || ch == 224)
-        //         printf (", %d", _getch ()); 
-        //     printf("\n");
-        // }
+        if(settings_menu_cursor_position > sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]) - 1){
+            settings_menu_cursor_position = sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]) - 1;
+        }
+        
+    }
+
+}
+
+void main_menu(){
+
+    int main_menu_cursor_position = 0;
+
+    while (1)
+    {
+        
+        draw_menu(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]));
+        set_menucursor(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), main_menu_cursor_position);
 
         int ch = _getch();
         if (ch == 0 || ch == 224)
@@ -247,21 +302,22 @@ void main_menu(){
 
                     switch (main_menu_cursor_position)
                     {
-                    case 0:
-                        // run = 0;
-                        pthread_t thread_id;
-                        pthread_create(&thread_id, NULL, start_random_game, NULL); 
-                        pthread_join(thread_id, NULL);   
-                        system("cls");                
-                        break;
-                    
-                    case 1:
-                        /* code */
-                        break;
+                        case 0:
+                            // run = 0;
+                            system("cls");
+                            pthread_t thread_id;
+                            pthread_create(&thread_id, NULL, start_random_game, NULL); 
+                            pthread_join(thread_id, NULL);   
+                            system("cls");                
+                            break;
                         
-                    case 2:
-                        exit(0);
-                        break;
+                        case 1:
+                            settings_menu();
+                            break;
+                            
+                        case 2:
+                            exit(0);
+                            break;
                     }
 
                     break;
@@ -271,20 +327,18 @@ void main_menu(){
                     break;
             }
         }
-        
-        if(main_menu_cursor_position < 0){
-            main_menu_cursor_position = 2;
-        }
 
-        if(main_menu_cursor_position > 2){
+        if(main_menu_cursor_position < 0){
             main_menu_cursor_position = 0;
         }
-        
+
+        if(main_menu_cursor_position > sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]) - 1){
+            main_menu_cursor_position = sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]) - 1;
+        }
+ 
     }
     
-
 }
-
 
 void generate_random_grid(struct cell grid_ptr[X_Size][Y_Size]){
     int x, y;

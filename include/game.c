@@ -1,17 +1,17 @@
 #include "game.h"
 #include "menu.h"
 
+uint64_t x_msws = 0, w_msws = 0;
+// Must be odd (least significant bit is "1"), and upper 64-bits non-zero
+uint64_t seed_msws = 0xb5ad4eceda1ce2a9; // qualifying seed
 
-uint64_t x_msws = 0, w_msws = 0, s_msws = 0xb5ad4eceda1ce2a9;
-
-unsigned int generate_random_int_msws(){
-    //Middle Square Weyl Sequence PRNG
-    x_msws *= x_msws;
-    x_msws += (w_msws += s_msws);
-    //  >>    Bitmanipulation rechts
-    //  <<    Bitmanipulation links
-    //  |     Bitweises OR
-    return (unsigned) (x_msws = (x_msws>>32) | (x_msws<<32));
+// return 32-bit number
+uint32_t generate_random_int_msws() {
+    // https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/
+    x_msws *= x_msws; // square the number
+    w_msws += seed_msws; // the weyl sequence
+    x_msws += w_msws; // apply to x
+    return x_msws = (x_msws>>32) | (x_msws<<32); // return the middle 32-bits
 }
 
 int count_living_neighbors(struct cell grid_ptr[X_Size][Y_Size], int x, int y){

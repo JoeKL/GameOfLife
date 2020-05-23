@@ -30,7 +30,7 @@ struct settings{
     COORD hud_aliveCells_pos;
 };
 
-unsigned int generate_random_int_msws();
+uint32_t generate_random_int_msws();
 void sleep_ms(int milliseconds);
 
 void load_preset(struct cell grid_ptr[X_Size][Y_Size]);
