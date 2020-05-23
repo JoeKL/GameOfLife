@@ -30,14 +30,17 @@ void draw_main_menu(struct menu_button mainMenu_Button[3], int array_length){
 }
 
 void draw_cursor(COORD cords){
-    set_cursor( cords.X - 3, cords.Y);
-    printf("-->");
+    char cursor[] = "-->";
+    set_cursor( cords.X - sizeof(cursor) + 1, cords.Y);
+    printf("%s", cursor);
+
     set_cursor(0,0);
 }
 
 void erase_cursor(COORD cords){
-    set_cursor( cords.X - 3, cords.Y);
-    printf("   ");
+    char cursor_eraser[] = "   ";
+    set_cursor( cords.X - sizeof(cursor_eraser) + 1, cords.Y);
+    printf("%s", cursor_eraser);
     set_cursor(0,0);
 }
 
