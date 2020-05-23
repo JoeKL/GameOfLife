@@ -16,6 +16,8 @@ struct cell{
 };
 
 struct settings{
+    
+    COORD gridsize;
 
     char symbolAlive;
     char symbolDead;
@@ -28,19 +30,25 @@ struct settings{
     COORD hud_periodInSeconds_pos;
     COORD hud_iterationsPerSecond_pos;
     COORD hud_aliveCells_pos;
+    
 };
 
 uint32_t generate_random_int_msws();
 void sleep_ms(int milliseconds);
 
-void load_preset(struct cell grid_ptr[X_Size][Y_Size]);
-void save_preset(struct cell grid_ptr[X_Size][Y_Size]);
+void alloc_grid(struct cell *** grid_ptr, const int x_size, const int y_size);
+void dealloc_grid(struct cell *** grid_ptr, const int x_size);
+void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, const int x_size, const int y_size);
 
-int count_living_neighbors(struct cell grid_ptr[X_Size][Y_Size], int x, int y);
-void define_neighborhood(struct cell grid_ptr[X_Size][Y_Size]);
+void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
+void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
 
-void initialize_grid(struct cell grid_ptr[X_Size][Y_Size]);
-void print_gamestate(struct cell grid_ptr[X_Size][Y_Size], struct settings gamesettings);
+int count_living_neighbors(struct cell ** grid_ptr, int x, int y);
+void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_size);
 
+void initialize_grid(struct cell ** grid_ptr, const int x_size, const int y_size);
+void print_grid(struct cell ** grid_ptr, const int x_size, const int y_size, struct settings gamesettings);
+
+void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size);
 
 #endif

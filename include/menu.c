@@ -1,13 +1,12 @@
 #include "menu.h"
 
 
-int set_cursor(int x, int y){
+void set_cursor(int x, int y){
     // https://docs.microsoft.com/en-us/windows/console/console-functions
     COORD koordinaten;
     koordinaten.X= x;
     koordinaten.Y= y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), koordinaten);
-    return 0;
 }
 
 COORD get_console_window_size(HANDLE hConsoleOutput){
@@ -18,14 +17,20 @@ COORD get_console_window_size(HANDLE hConsoleOutput){
     size.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
     size.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
+    //x = 237
+    //y = 60
     return size;
 }
 
 void draw_menu(struct menu_button Menu_Button[3], int array_length){
+
     for (int i = 0; i < array_length; i++){
+
         set_cursor(Menu_Button[i].pos.X,Menu_Button[i].pos.Y);
+
         printf("%s", Menu_Button[i].label);
     }
+
     set_cursor(0,0);
 }
 
@@ -46,6 +51,7 @@ void erase_cursor(COORD cords){
 
 void console_fullscreen(){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    // Consolewindow -> Alt+Enter
     SetConsoleDisplayMode(consoleHandle,CONSOLE_FULLSCREEN_MODE,0);
     COORD consoleSize = get_console_window_size(consoleHandle);
     SetConsoleScreenBufferSize(consoleHandle, consoleSize);     
@@ -53,12 +59,12 @@ void console_fullscreen(){
 
 void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position){
 
-        for (int i = 0; i < array_length; i++)
-        {
-            if (i == position){
-                draw_cursor(Menu_Button[i].pos);
-            } else {
-                erase_cursor(Menu_Button[i].pos);
-            }
+    for (int i = 0; i < array_length; i++)
+    {
+        if (i == position){
+            draw_cursor(Menu_Button[i].pos);
+        } else {
+            erase_cursor(Menu_Button[i].pos);
         }
+    }
 }

@@ -4,14 +4,15 @@
 #include <windows.h>
 #include <conio.h>
 #include <pthread.h> 
-#include <unistd.h>
+// #include <unistd.h>
 
 #include "include/menu.h"
 #include "include/game.h"
 
 struct settings gamesettings;
-struct cell grid[X_Size][Y_Size];
-struct cell gridcopy[X_Size][Y_Size];
+
+struct cell **grid;
+struct cell **gridcopy;
 
 struct menu_button mainMenu_Button[3];
 struct menu_button settingsMenu_Button[5];
@@ -22,19 +23,22 @@ int currentGeneration = 0;
 void run_ticks(int periodInSeconds, int ticksPerSecond);
 void tick();
 
-void generate_random_grid(struct cell grid_ptr[X_Size][Y_Size]);
-
 void draw_hud();
 void settings_menu();
 void main_menu();
 void init_settings();
+    
 
 int main(){
 
     console_fullscreen();
     init_settings();
+
     main_menu();
     
+    initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+
     system("pause");
     return 0;
 }
@@ -94,8 +98,12 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 60;
-    gamesettings.periodInSeconds = 1;
+    gamesettings.iterationsPerSecond = 240;
+    gamesettings.periodInSeconds = 10;
+
+    //setze grid size
+    gamesettings.gridsize.X = 117;
+    gamesettings.gridsize.Y = 57;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -122,14 +130,16 @@ void tick(){
     draw_hud();
 
     aliveCells = 0;
-    memcpy(&gridcopy, &grid, sizeof(grid));
-    define_neighborhood(gridcopy);
+
+    copy_grid(gridcopy, grid,gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    define_neighborhood(gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     int x;
     int y;
 
-    for(y = 0; y < Y_Size; y++){
-        for(x = 0; x < X_Size; x++){
+    for(y = 0; y < gamesettings.gridsize.Y; y++){
+        for(x = 0; x < gamesettings.gridsize.X; x++){
             if (grid[x][y].alive) aliveCells++;
 
             int LivingNeighbors = count_living_neighbors(gridcopy, x, y);
@@ -153,7 +163,7 @@ void tick(){
             }
         }
     }
-    print_gamestate(grid, gamesettings);
+    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
     currentGeneration++;
 }
 
@@ -163,10 +173,10 @@ void draw_hud(){
     printf("generation: %d of %d", currentGeneration, gamesettings.iterationsPerSecond*gamesettings.periodInSeconds);
 
     set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
-    printf("cells alive: %d of %d", aliveCells, X_Size*Y_Size);
+    printf("cells alive: %d of %d", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.X);
     
     set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
-    printf("grid size: %dx%d", X_Size, Y_Size);
+    printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
     printf("periodInSeconds: %ds", gamesettings.periodInSeconds);
@@ -180,10 +190,19 @@ void draw_hud(){
 void *start_random_game(void *vargp){
 
     currentGeneration = 0;
-    initialize_grid(grid);
-    //load_preset(grid);
-    generate_random_grid(grid);
+
+    alloc_grid(&grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    alloc_grid(&gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
     run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
+
+    dealloc_grid(&grid, gamesettings.gridsize.X);
+    dealloc_grid(&gridcopy, gamesettings.gridsize.X);
+
     return NULL; 
 }
 
@@ -226,11 +245,11 @@ void settings_menu(){
                             break;
                         
                         case 1:
-                            settings_menu();
+                            
                             break;
                             
                         case 2:
-                            exit(0);
+                            
                             break;
                     }
 
@@ -263,6 +282,7 @@ void main_menu(){
     {
         
         draw_menu(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]));
+
         set_menucursor(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), main_menu_cursor_position);
 
         int ch = _getch();
@@ -339,14 +359,3 @@ void main_menu(){
     }
     
 }
-
-void generate_random_grid(struct cell grid_ptr[X_Size][Y_Size]){
-    int x, y;
-
-    for(y = 0; y < Y_Size; y++){
-        for(x = 0; x < X_Size; x++){
-            grid_ptr[x][y].alive = generate_random_int_msws()*rand() % 2;
-        }
-    }
-}
-
