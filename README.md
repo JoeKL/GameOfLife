@@ -5,3 +5,39 @@
 ## Dokumentation
 
 Hier entsteht eine Dokumentation.
+
+### Abstrakte Datenstrukturen
+
+
+### Strukturen
+
+```c
+struct cell{
+    int alive;
+    struct cell *neighborCell[8];
+};
+```
+
+```c
+struct settings{
+    
+    COORD gridsize;
+
+    char symbolAlive;
+    char symbolDead;
+
+    int periodInSeconds;
+    int iterationsPerSecond;
+
+    COORD hud_currentGeneration_pos;  
+    COORD hud_gridSize_pos;
+    COORD hud_periodInSeconds_pos;
+    COORD hud_iterationsPerSecond_pos;
+    COORD hud_aliveCells_pos;
+    
+};
+```
+
+### Funktionen
+
+[logo]:  "Logo Title Text 2"
