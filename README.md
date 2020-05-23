@@ -40,4 +40,4 @@ struct settings{
 
 ### Funktionen
 
-[logo]:  "Logo Title Text 2"
+[test]: (https://raw.githubusercontent.com/JoeKL/GameOfLife/master/doc/struct%20cell.png) "Test"

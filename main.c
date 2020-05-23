@@ -10,6 +10,13 @@
 
 struct settings gamesettings;
 
+// struct grid{
+//     struct cell **grid;
+//     struct cell **gridcopy;
+//     COORD gridsize;
+// } game_grid;
+
+
 struct cell **grid;
 struct cell **gridcopy;
 
@@ -31,13 +38,13 @@ void init_settings();
     
 
 int main(){
+
+    set_fontsize(5);
+
     console_fullscreen();
     init_settings();
 
     main_menu();
-    
-    initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
 
     system("pause");
     return 0;
@@ -95,15 +102,15 @@ void init_settings(){
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
-    gamesettings.symbolDead = ' ';
+    gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 60;
+    gamesettings.iterationsPerSecond = 170;
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
-    gamesettings.gridsize.X = 117;
-    gamesettings.gridsize.Y = 57;
+    gamesettings.gridsize.X = 300;
+    gamesettings.gridsize.Y = 100;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -127,13 +134,11 @@ void run_ticks(int periodInSeconds, int ticksPerSecond){
 }
 
 void tick(){
-    draw_hud();
+    // draw_hud();
 
     aliveCells = 0;
 
     copy_grid(gridcopy, grid,gamesettings.gridsize.X, gamesettings.gridsize.Y);
-
-    define_neighborhood(gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     int x;
     int y;
@@ -143,28 +148,28 @@ void tick(){
 
             if (grid[x][y].alive) aliveCells++;
 
-            int LivingNeighbors = count_living_neighbors(gridcopy, x, y);
-
             //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
-            if(LivingNeighbors == 3 && gridcopy[x][y].alive == 0){
+            if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
                 grid[x][y].alive = 1;
+                refresh_neighborhood(grid[x][y], 1);
             }
 
             //Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-            if (gridcopy[x][y].alive == 1 && LivingNeighbors < 2) {
-                    grid[x][y].alive = 0;
+            if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
+                grid[x][y].alive = 0;
+                refresh_neighborhood(grid[x][y], -1);
             }
-            //Eine lebende Zelle mit zwei oder drei lebenden Nachbarn bleibt in der Folgegeneration lebend.
-            if (gridcopy[x][y].alive == 1 && (LivingNeighbors == 2 || LivingNeighbors == 3)) {
-                    grid[x][y].alive = 1;
-            }
+
             //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
-            if (gridcopy[x][y].alive == 1 && LivingNeighbors > 3) {
-                    grid[x][y].alive = 0;
+            if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
+                grid[x][y].alive = 0;
+                refresh_neighborhood(grid[x][y], -1);
+
             }
         }
     }
     print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
     currentGeneration++;
     
     if (aliveCellsPrevGen == aliveCells) {
@@ -212,7 +217,16 @@ void *start_random_game(void *vargp){
     initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    define_neighborhood(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    define_neighborhood(gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    initialize_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+
     print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+
     run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
