@@ -12,6 +12,7 @@ struct menu_button
 };
 
 void set_cursor(int x, int y);
+void set_fontsize(int size);
 void draw_menu(struct menu_button Menu_Button[3], int array_length);
 void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position);
 

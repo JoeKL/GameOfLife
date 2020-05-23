@@ -22,6 +22,14 @@ COORD get_console_window_size(HANDLE hConsoleOutput){
     return size;
 }
 
+void set_fontsize(int size){
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.dwFontSize.Y = size;      
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+}
+
 void draw_menu(struct menu_button Menu_Button[3], int array_length){
 
     for (int i = 0; i < array_length; i++){
