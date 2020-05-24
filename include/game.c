@@ -15,15 +15,14 @@ uint32_t generate_random_int_msws() {
 }
 
 int count_living_neighbors(struct cell grid){
-    int count = 0;
-    int i = 0;
-    for(i; i<8; i++){
-        if(grid.neighborCell[i] -> alive == 1){
-            count++;
-        }
-    }
-
-    return count;
+    return  grid.neighborCell[0] -> alive 
+        +   grid.neighborCell[1] -> alive 
+        +   grid.neighborCell[2] -> alive 
+        +   grid.neighborCell[3] -> alive 
+        +   grid.neighborCell[4] -> alive 
+        +   grid.neighborCell[5] -> alive 
+        +   grid.neighborCell[6] -> alive
+        +   grid.neighborCell[7] -> alive;
 }
 
 // struct cell ***grid_ptr -> declare grid as pointer to pointer to pointer to struct cell
