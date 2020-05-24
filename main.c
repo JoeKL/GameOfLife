@@ -39,7 +39,7 @@ void init_settings();
 
 int main(){
 
-    set_fontsize(5);
+    // set_fontsize(5);
 
     console_fullscreen();
     init_settings();
@@ -109,8 +109,8 @@ void init_settings(){
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
-    gamesettings.gridsize.X = 300;
-    gamesettings.gridsize.Y = 100;
+    gamesettings.gridsize.X = 117;
+    gamesettings.gridsize.Y = 57;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -168,10 +168,6 @@ void tick(){
                     refresh_neighborhood(grid[x][y], -1);
 
                 }
-            }
-        }
-    }
-
             }
         }
     }
