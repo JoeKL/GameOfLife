@@ -42,7 +42,7 @@ void init_settings();
 int main(){
     // set_fontsize(1);
     
-    console_fullscreen();
+    // console_fullscreen();
     init_settings();
 
     main_menu();
@@ -108,7 +108,7 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 1000;
+    gamesettings.iterationsPerSecond = 100;
     gamesettings.periodInSeconds = 1;
 
     //setze grid size
@@ -141,7 +141,7 @@ void tick(){
 
     aliveCells = 0;
 
-    copy_grid(gridcopy, grid,gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    copy_grid(gridcopy, grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     int x;
     int y;
@@ -241,7 +241,7 @@ void *start_random_game(void *vargp){
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
-    dealloc_buffer(&buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    dealloc_buffer(&buffer);
 
     system("cls");
 

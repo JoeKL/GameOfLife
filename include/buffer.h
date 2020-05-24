@@ -8,7 +8,7 @@
 #include "game.h"
 
 void alloc_buffer(char **buffer, const int x_size, const int y_size);
-void dealloc_buffer(char **buffer, const int x_size, const int y_size);
+void dealloc_buffer(char **buffer);
 
 void init_buffer(char *buffer, const int x_size, const int y_size, char symbolAlive, char symbolDead);
 // void update_buffer(char *buffer, struct cell **grid_ptr, struct cell **gridcopy_ptr, const int x_size, const int y_size, char symbolAlive, char symbolDead);

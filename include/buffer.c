@@ -12,13 +12,8 @@ void alloc_buffer(char **buffer, const int x_size, const int y_size){
     *buffer = (char*)malloc( calc_buffersize(x_size, y_size) );
 }
 
-void dealloc_buffer(char **buffer, const int x_size, const int y_size){
-    int buffer_size = calc_buffersize(x_size, y_size);
-    for (int i = 0; i < buffer_size - 1; i++)
-    {
-        //fehler?
-        free(buffer[i]);
-    }
+void dealloc_buffer(char **buffer){
+    free(buffer);
 }
 
 void print_buffer(char *buffer){
