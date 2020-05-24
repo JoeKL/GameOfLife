@@ -192,59 +192,6 @@ void initialize_neighbors(struct cell **grid_ptr, const int x_size, const int y_
     }
 }
 
-
-
-void print_grid(struct cell **grid_ptr, const int x_size, const int y_size, struct settings gamesettings){
-
-    char buffer[sizeof(char)*x_size*y_size*2+y_size];
-
-    for(int y = 0; y < y_size; y++){
-        for(int x = 0; x < x_size; x++){
-            if (grid_ptr[x][y].alive == 1) {
-
-                if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolAlive);
-                } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolAlive);
-                }
-
-            }else {
-
-                if(x == 0 && y == 0){
-                    snprintf(buffer, sizeof(buffer),"%c ", gamesettings.symbolDead);
-                } else {
-                    snprintf(buffer + strlen(buffer), sizeof(buffer),"%c ", gamesettings.symbolDead);
-                }
-            }
-        }
-        snprintf(buffer + strlen(buffer), sizeof(buffer),"\n");
-    }
-    set_cursor(0,0);
-    printf("%s\n", buffer);
-    set_cursor(0,0);
-}
-
-void print_neighbors(struct cell **grid_ptr, const int x_size, const int y_size, struct settings gamesettings){
-
-    char buffer[sizeof(char)*x_size*y_size*2+y_size];
-
-    for(int y = 0; y < y_size; y++){
-        for(int x = 0; x < x_size; x++){
-
-            if(x == 0 && y == 0){
-                snprintf(buffer, sizeof(buffer),"%d ", grid_ptr[x][y].livingNeighbors);
-            } else {
-                snprintf(buffer + strlen(buffer), sizeof(buffer),"%d ", grid_ptr[x][y].livingNeighbors);
-            }
-
-        }
-        snprintf(buffer + strlen(buffer), sizeof(buffer),"\n");
-    }               
-    set_cursor(0,12);
-    printf("%s\n", buffer);
-    set_cursor(0,23);
-}
-
 void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size){
     int x, y;
 
