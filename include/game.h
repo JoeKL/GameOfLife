@@ -38,22 +38,22 @@ struct settings{
 
 uint32_t generate_random_int_msws();
 
-void alloc_grid(struct cell *** grid_ptr, const int x_size, const int y_size);
+void alloc_grid(struct cell *** grid_ptr, COORD gridsize);
 void dealloc_grid(struct cell *** grid_ptr, const int x_size);
-void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, const int x_size, const int y_size);
+void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD gridsize);
 
-void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
-void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
+void load_preset(struct cell ** grid_ptr, COORD gridsize);
+void save_preset(struct cell ** grid_ptr, COORD gridsize);
 
 int count_living_neighbors(struct cell grid);
-void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_size);
+void define_neighborhood(struct cell ** grid_ptr, COORD gridsize);
 void refresh_neighborhood(struct cell grid, int value);
 
-void initialize_grid(struct cell ** grid_ptr, const int x_size, const int y_size);
-void initialize_neighbors(struct cell ** grid_ptr, const int x_size, const int y_size);
-void print_grid(struct cell ** grid_ptr, const int x_size, const int y_size, struct settings gamesettings);
-void print_neighbors(struct cell ** grid_ptr, const int x_size, const int y_size, struct settings gamesettings);
+void initialize_grid(struct cell ** grid_ptr, COORD gridsize);
+void initialize_neighbors(struct cell ** grid_ptr, COORD gridsize);
+void print_grid(struct cell ** grid_ptr, COORD gridsize, struct settings gamesettings);
+void print_neighbors(struct cell ** grid_ptr, COORD gridsize, struct settings gamesettings);
 
-void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size);
+void generate_random_grid(struct cell **grid_ptr, COORD gridsize);
 
 #endif

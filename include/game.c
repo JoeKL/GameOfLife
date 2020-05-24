@@ -25,12 +25,12 @@ int count_living_neighbors(struct cell grid){
 }
 
 // struct cell ***grid_ptr -> declare grid as pointer to pointer to pointer to struct cell
-void alloc_grid(struct cell ***grid_ptr, const int x_size, const int y_size){
+void alloc_grid(struct cell ***grid_ptr, COORD gridsize){
 
-    *grid_ptr = (struct cell **)malloc(x_size * sizeof(struct cell *));
-    for (int i = 0; i < x_size; i++)
+    *grid_ptr = (struct cell **)malloc(gridsize.X * sizeof(struct cell *));
+    for (int i = 0; i < gridsize.X; i++)
     {   
-        (*grid_ptr)[i] = (struct cell *)malloc(y_size * sizeof(struct cell));
+        (*grid_ptr)[i] = (struct cell *)malloc(gridsize.Y * sizeof(struct cell));
     }
 }
 
@@ -43,7 +43,7 @@ void dealloc_grid(struct cell *** grid_ptr, const int x_size){
 }
 
 
-void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
+void save_preset(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "w");
 
@@ -53,8 +53,8 @@ void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
         int x;
         int y;
 
-        for(y = 0; y < y_size; y++){
-            for(x = 0; x < x_size; x++){
+        for(y = 0; y < gridsize.Y; y++){
+            for(x = 0; x < gridsize.X; x++){
                 fprintf(fp,"%i ",grid_ptr[x][y].alive);
             }
             fprintf(fp,"\n");
@@ -64,14 +64,14 @@ void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
     }
 }
 
-void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, const int x_size, const int y_size){
-    for(int j=0; j < x_size; j++) {
-        memcpy(grid_ptr_dest[j], grid_ptr_src[j], y_size * sizeof(struct cell));
+void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD gridsize){
+    for(int j=0; j < gridsize.X; j++) {
+        memcpy(grid_ptr_dest[j], grid_ptr_src[j], gridsize.Y * sizeof(struct cell));
    }
 
 }
 
-void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
+void load_preset(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "r");
     int tempalive;
@@ -80,8 +80,8 @@ void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
     if(fp == NULL) {
         printf("Datei konnte nicht geoeffnet werden.\n");
     }else {
-        for(y = 0; y < y_size; y++){
-            for(x = 0; x < x_size; x++){
+        for(y = 0; y < gridsize.Y; y++){
+            for(x = 0; x < gridsize.X; x++){
                 fscanf(fp, "%d ", &tempalive);
                 grid_ptr[x][y].alive = tempalive;
             }
@@ -90,7 +90,7 @@ void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size){
     }
 }
 
-void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_size){
+void define_neighborhood(struct cell ** grid_ptr, COORD gridsize){
 
     /*
         Nachbar wird wie folgt definiert:
@@ -102,8 +102,8 @@ void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_
 
     //Nachbaren eintragen
     int x, y;
-    for(y = 0; y < y_size; y++){
-        for(x = 0; x < x_size; x++){
+    for(y = 0; y < gridsize.Y; y++){
+        for(x = 0; x < gridsize.X; x++){
 
             grid_ptr[x][y].neighborCell[0] = &grid_ptr[x-1][y-1]; // Nachbar 1
             grid_ptr[x][y].neighborCell[1] = &grid_ptr[x][y-1]; // Nachbar 2
@@ -119,13 +119,13 @@ void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_
 
             //Unsere Zelle ein Linkes Kantenfeld ist
             if (x == 0) {
-                grid_ptr[x][y].neighborCell[0] = &grid_ptr[x_size-1][y-1]; 
-                grid_ptr[x][y].neighborCell[3] = &grid_ptr[x_size-1][y];
-                grid_ptr[x][y].neighborCell[5] = &grid_ptr[x_size-1][y+1];
+                grid_ptr[x][y].neighborCell[0] = &grid_ptr[gridsize.X-1][y-1]; 
+                grid_ptr[x][y].neighborCell[3] = &grid_ptr[gridsize.X-1][y];
+                grid_ptr[x][y].neighborCell[5] = &grid_ptr[gridsize.X-1][y+1];
             }
             
             //Unsere Zelle ein Rechtes Kantenfeld ist
-            if (x == x_size-1) {
+            if (x == gridsize.X-1) {
                 grid_ptr[x][y].neighborCell[2] = &grid_ptr[0][y-1];
                 grid_ptr[x][y].neighborCell[4] = &grid_ptr[0][y];
                 grid_ptr[x][y].neighborCell[7] = &grid_ptr[0][y+1];
@@ -133,13 +133,13 @@ void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_
             
             //Unsere Zelle ein Oberes Kantenfeld ist
             if (y == 0) {
-                grid_ptr[x][y].neighborCell[0] = &grid_ptr[x-1][y_size-1];
-                grid_ptr[x][y].neighborCell[1] = &grid_ptr[x][y_size-1];
-                grid_ptr[x][y].neighborCell[2] = &grid_ptr[x+1][y_size-1];
+                grid_ptr[x][y].neighborCell[0] = &grid_ptr[x-1][gridsize.Y-1];
+                grid_ptr[x][y].neighborCell[1] = &grid_ptr[x][gridsize.Y-1];
+                grid_ptr[x][y].neighborCell[2] = &grid_ptr[x+1][gridsize.Y-1];
             }
             
             //Unsere Zelle ein Unteres Kantenfeld ist
-            if (y == y_size-1) {
+            if (y == gridsize.Y-1) {
                 grid_ptr[x][y].neighborCell[5] = &grid_ptr[x-1][0];
                 grid_ptr[x][y].neighborCell[6] = &grid_ptr[x][0];
                 grid_ptr[x][y].neighborCell[7] = &grid_ptr[x+1][0];
@@ -148,21 +148,21 @@ void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_
 
             //Unsere Zelle ein in der Oberen Linken Ecke ist            
             if (x == 0 && y == 0){
-                grid_ptr[x][y].neighborCell[0] = &grid_ptr[x_size-1][y_size-1];
+                grid_ptr[x][y].neighborCell[0] = &grid_ptr[gridsize.X-1][gridsize.Y-1];
             }
 
             //Unsere Zelle ein in der Unteren Linken Ecke ist           
-            if (x == 0 && y == y_size-1){
-                grid_ptr[x][y].neighborCell[5] = &grid_ptr[x_size-1][0];
+            if (x == 0 && y == gridsize.Y-1){
+                grid_ptr[x][y].neighborCell[5] = &grid_ptr[gridsize.X-1][0];
             }
 
             //Unsere Zelle ein in der Oberen Rechten Ecke ist         
-            if (x == x_size-1 && y == 0){
-                grid_ptr[x][y].neighborCell[2] = &grid_ptr[0][y_size-1];
+            if (x == gridsize.X-1 && y == 0){
+                grid_ptr[x][y].neighborCell[2] = &grid_ptr[0][gridsize.Y-1];
             }
 
             //Unsere Zelle ein in der Unten Rechten Ecke ist      
-            if (x == x_size-1 && y == y_size-1){
+            if (x == gridsize.X-1 && y == gridsize.Y-1){
                 grid_ptr[x][y].neighborCell[7] = &grid_ptr[0][0];
             }
         }
@@ -170,11 +170,11 @@ void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_
 }
 
 
-void initialize_grid(struct cell **grid_ptr, const int x_size, const int y_size){
+void initialize_grid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
     //erzeugen des leeren Feldes
-    for(y = 0; y < y_size; y++){
-        for(x = 0; x < x_size; x++){
+    for(y = 0; y < gridsize.Y; y++){
+        for(x = 0; x < gridsize.X; x++){
             grid_ptr[x][y].alive = 0;
             grid_ptr[x][y].livingNeighbors = 0;
         }
@@ -182,21 +182,21 @@ void initialize_grid(struct cell **grid_ptr, const int x_size, const int y_size)
 }
 
 
-void initialize_neighbors(struct cell **grid_ptr, const int x_size, const int y_size){
+void initialize_neighbors(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
-    for(y = 0; y < y_size; y++){
-        for(x = 0; x < x_size; x++){
+    for(y = 0; y < gridsize.Y; y++){
+        for(x = 0; x < gridsize.X; x++){
             grid_ptr[x][y].livingNeighbors = count_living_neighbors(grid_ptr[x][y]);
         }
     }
 }
 
-void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size){
+void generate_random_grid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
-    for(y = 0; y < y_size; y++){
-        for(x = 0; x < x_size; x++){
+    for(y = 0; y < gridsize.Y; y++){
+        for(x = 0; x < gridsize.X; x++){
             grid_ptr[x][y].alive = generate_random_int_msws() * rand() % 2;
         }
     }
