@@ -146,24 +146,34 @@ void tick(){
     for(y = 0; y < gamesettings.gridsize.Y; y++){
         for(x = 0; x < gamesettings.gridsize.X; x++){
 
+               for(y = 0; y < gamesettings.gridsize.Y; y++){
+        for(x = 0; x < gamesettings.gridsize.X; x++){
+
             if (grid[x][y].alive) aliveCells++;
 
-            //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
-            if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
-                grid[x][y].alive = 1;
-                refresh_neighborhood(grid[x][y], 1);
-            }
+            if (gridcopy[x][y].livingNeighbors){
+                
+                //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
+                if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
+                    grid[x][y].alive = 1;
+                    refresh_neighborhood(grid[x][y], 1);
+                }
 
-            //Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-            if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
-                grid[x][y].alive = 0;
-                refresh_neighborhood(grid[x][y], -1);
-            }
+                // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
+                if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
+                    grid[x][y].alive = 0;
+                    refresh_neighborhood(grid[x][y], -1);
+                }
 
-            //Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
-            if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
-                grid[x][y].alive = 0;
-                refresh_neighborhood(grid[x][y], -1);
+                // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
+                if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
+                    grid[x][y].alive = 0;
+                    refresh_neighborhood(grid[x][y], -1);
+
+                }
+            }
+        }
+    }
 
             }
         }
