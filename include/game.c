@@ -43,7 +43,7 @@ void dealloc_grid(struct cell *** grid_ptr, const int x_size){
 }
 
 
-void save_preset(struct cell ** grid_ptr, COORD gridsize){
+void save_preset_from_grid(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "w");
 
@@ -71,7 +71,7 @@ void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD 
 
 }
 
-void load_preset(struct cell ** grid_ptr, COORD gridsize){
+void load_preset_to_grid(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "r");
     int tempalive;
@@ -170,7 +170,7 @@ void define_neighborhood(struct cell ** grid_ptr, COORD gridsize){
 }
 
 
-void initialize_emptyGrid(struct cell **grid_ptr, COORD gridsize){
+void initialize_empty_grid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
     for(y = 0; y < gridsize.Y; y++){
         for(x = 0; x < gridsize.X; x++){
@@ -181,7 +181,7 @@ void initialize_emptyGrid(struct cell **grid_ptr, COORD gridsize){
 }
 
 
-void initialize_allNeighbors(struct cell **grid_ptr, COORD gridsize){
+void calc_all_neighbors(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
     for(y = 0; y < gridsize.Y; y++){

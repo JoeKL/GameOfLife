@@ -223,16 +223,16 @@ void *start_random_game(void *vargp){
     alloc_grid(&gridcopy, gamesettings.gridsize);
     alloc_buffer(&buffer, gamesettings.gridsize);
 
-    initialize_emptyGrid(grid, gamesettings.gridsize);
-    // save_preset(grid, gamesettings.gridsize);
-    load_preset(grid, gamesettings.gridsize);
+    initialize_empty_grid(grid, gamesettings.gridsize);
+    // save_preset_from_grid(grid, gamesettings.gridsize);
+    load_preset_to_grid(grid, gamesettings.gridsize);
     // generate_random_grid(grid, gamesettings.gridsize);
-    init_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
+    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     define_neighborhood(grid, gamesettings.gridsize);
     define_neighborhood(gridcopy, gamesettings.gridsize);
 
-    initialize_allNeighbors(grid, gamesettings.gridsize);
+    calc_all_neighbors(grid, gamesettings.gridsize);
 
 
     // print_grid(grid, gamesettings.gridsize, gamesettings);

@@ -1,15 +1,15 @@
 #include "buffer.h"
 
-int calc_buffersize(COORD gridsize){
+int calc_buffer_size(COORD gridsize){
     return sizeof(char) * gridsize.X * gridsize.Y * 2;
 }
 
-int calc_positionInBuffer(COORD gridsize, const int x_pos, const int y_pos){
+int calc_position_in_buffer(COORD gridsize, const int x_pos, const int y_pos){
     return  ( y_pos * gridsize.X + x_pos ) * 2;
 }
 
 void alloc_buffer(char **buffer, COORD gridsize){
-    *buffer = (char*)malloc( calc_buffersize(gridsize) );
+    *buffer = (char*)malloc( calc_buffer_size(gridsize) );
 }
 
 void dealloc_buffer(char **buffer){
@@ -22,9 +22,9 @@ void print_buffer(char *buffer){
     set_cursor(0,0);
 }
 
-void init_buffer(char *buffer, COORD gridsize, char symbolAlive, char symbolDead){
+void initialize_buffer(char *buffer, COORD gridsize, char symbolAlive, char symbolDead){
 
-    int buffer_size = calc_buffersize(gridsize);
+    int buffer_size = calc_buffer_size(gridsize);
     int written_chars = 0;
 
     for(int y = 0; y < gridsize.Y; y++){
@@ -45,11 +45,11 @@ void init_buffer(char *buffer, COORD gridsize, char symbolAlive, char symbolDead
 void update_buffer_at_coord(char *buffer, COORD gridsize, char symbolAlive, char symbolDead, int x_pos, int y_pos, int alive){
     if (alive) {
         
-        buffer[calc_positionInBuffer(gridsize, x_pos, y_pos)] = symbolAlive;
+        buffer[calc_position_in_buffer(gridsize, x_pos, y_pos)] = symbolAlive;
 
     }else {
 
-        buffer[calc_positionInBuffer(gridsize, x_pos, y_pos)] = symbolDead;
+        buffer[calc_position_in_buffer(gridsize, x_pos, y_pos)] = symbolDead;
 
     }
 }
