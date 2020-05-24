@@ -12,8 +12,10 @@
 
 struct cell{
     int alive;
+    int livingNeighbors;
     struct cell *neighborCell[8];
 };
+
 
 struct settings{
     
@@ -42,11 +44,14 @@ void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, const 
 void load_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
 void save_preset(struct cell ** grid_ptr, const int x_size, const int y_size);
 
-int count_living_neighbors(struct cell ** grid_ptr, int x, int y);
+int count_living_neighbors(struct cell grid);
 void define_neighborhood(struct cell ** grid_ptr, const int x_size, const int y_size);
+void refresh_neighborhood(struct cell grid, int value);
 
 void initialize_grid(struct cell ** grid_ptr, const int x_size, const int y_size);
+void initialize_neighbors(struct cell ** grid_ptr, const int x_size, const int y_size);
 void print_grid(struct cell ** grid_ptr, const int x_size, const int y_size, struct settings gamesettings);
+void print_neighbors(struct cell ** grid_ptr, const int x_size, const int y_size, struct settings gamesettings);
 
 void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size);
 

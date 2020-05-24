@@ -14,16 +14,15 @@ uint32_t generate_random_int_msws() {
     return x_msws = (x_msws>>32) | (x_msws<<32); // return the middle 32-bits
 }
 
-int count_living_neighbors(struct cell ** grid_ptr, int x, int y){
-    int count = 0;
-    int i = 0;
-    for(i; i<8; i++){
-        if(grid_ptr[x][y].neighborCell[i] -> alive == 1){
-            count++;
-        }
-    }
-
-    return count;
+int count_living_neighbors(struct cell grid){
+    return  grid.neighborCell[0] -> alive 
+        +   grid.neighborCell[1] -> alive 
+        +   grid.neighborCell[2] -> alive 
+        +   grid.neighborCell[3] -> alive 
+        +   grid.neighborCell[4] -> alive 
+        +   grid.neighborCell[5] -> alive 
+        +   grid.neighborCell[6] -> alive
+        +   grid.neighborCell[7] -> alive;
 }
 
 // struct cell ***grid_ptr -> declare grid as pointer to pointer to pointer to struct cell
@@ -178,10 +177,22 @@ void initialize_grid(struct cell **grid_ptr, const int x_size, const int y_size)
     for(y = 0; y < y_size; y++){
         for(x = 0; x < x_size; x++){
             grid_ptr[x][y].alive = 0;
+            grid_ptr[x][y].livingNeighbors = 0;
         }
     }
-    define_neighborhood(grid_ptr, x_size, y_size);
 }
+
+
+void initialize_neighbors(struct cell **grid_ptr, const int x_size, const int y_size){
+    int x, y;
+
+    for(y = 0; y < y_size; y++){
+        for(x = 0; x < x_size; x++){
+            grid_ptr[x][y].livingNeighbors = count_living_neighbors(grid_ptr[x][y]);
+        }
+    }
+}
+
 
 
 void print_grid(struct cell **grid_ptr, const int x_size, const int y_size, struct settings gamesettings){
@@ -214,6 +225,26 @@ void print_grid(struct cell **grid_ptr, const int x_size, const int y_size, stru
     set_cursor(0,0);
 }
 
+void print_neighbors(struct cell **grid_ptr, const int x_size, const int y_size, struct settings gamesettings){
+
+    char buffer[sizeof(char)*x_size*y_size*2+y_size];
+
+    for(int y = 0; y < y_size; y++){
+        for(int x = 0; x < x_size; x++){
+
+            if(x == 0 && y == 0){
+                snprintf(buffer, sizeof(buffer),"%d ", grid_ptr[x][y].livingNeighbors);
+            } else {
+                snprintf(buffer + strlen(buffer), sizeof(buffer),"%d ", grid_ptr[x][y].livingNeighbors);
+            }
+
+        }
+        snprintf(buffer + strlen(buffer), sizeof(buffer),"\n");
+    }               
+    set_cursor(0,12);
+    printf("%s\n", buffer);
+    set_cursor(0,23);
+}
 
 void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_size){
     int x, y;
@@ -221,6 +252,15 @@ void generate_random_grid(struct cell **grid_ptr, const int x_size, const int y_
     for(y = 0; y < y_size; y++){
         for(x = 0; x < x_size; x++){
             grid_ptr[x][y].alive = generate_random_int_msws() * rand() % 2;
+        }
+    }
+}
+
+void refresh_neighborhood(struct cell grid, int value){
+    int i = 0;
+    for(i; i<8; i++){
+        if(grid.neighborCell[i] -> livingNeighbors != 0 || value > 0){
+            grid.neighborCell[i] -> livingNeighbors += value;
         }
     }
 }
