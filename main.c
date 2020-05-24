@@ -146,9 +146,6 @@ void tick(){
     for(y = 0; y < gamesettings.gridsize.Y; y++){
         for(x = 0; x < gamesettings.gridsize.X; x++){
 
-               for(y = 0; y < gamesettings.gridsize.Y; y++){
-        for(x = 0; x < gamesettings.gridsize.X; x++){
-
             if (grid[x][y].alive) aliveCells++;
 
             if (gridcopy[x][y].livingNeighbors){
