@@ -40,9 +40,6 @@ struct settings{
 
 ### mermaid integration test
 
-<<<<<<< Updated upstream
-[logo]:  "Logo Title Text 2"
-=======
 ```mermaid
 graph TD
 A[Hard] -->|Text| B(Round)
@@ -109,4 +106,3 @@ pie
 "Cats" : 85
 "Rats" : 15
 ```
->>>>>>> Stashed changes
