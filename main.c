@@ -7,6 +7,7 @@
 
 #include "include/menu.h"
 #include "include/game.h"
+#include "include/buffer.h"
 
 struct settings gamesettings;
 
@@ -19,6 +20,7 @@ struct settings gamesettings;
 
 struct cell **grid;
 struct cell **gridcopy;
+char *buffer;
 
 struct menu_button mainMenu_Button[3];
 struct menu_button settingsMenu_Button[5];
@@ -35,16 +37,17 @@ void draw_hud();
 void settings_menu();
 void main_menu();
 void init_settings();
-    
 
 int main(){
 
     // set_fontsize(5);
-
+    
     console_fullscreen();
     init_settings();
 
     main_menu();
+
+    set_cursor(0,6);
 
     system("pause");
     return 0;
@@ -105,7 +108,7 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 170;
+    gamesettings.iterationsPerSecond = 300;
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
@@ -172,10 +175,10 @@ void tick(){
             }
         }
     }
-    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
-    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    update_buffer(buffer, grid, gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
+    print_buffer(buffer);
+
     currentGeneration++;
-    
     if (aliveCellsPrevGen == aliveCells) {
         iterationsSinceLastChange++;
     } else {
@@ -185,10 +188,10 @@ void tick(){
 
     aliveCellsPrevGen = aliveCells;
     
-    if (iterationsSinceLastChange >= 20){
-        printf("asdada\n");
-        system("pause");
-    }
+    // if (iterationsSinceLastChange >= 20){
+    //     printf("asdada\n");
+    //     system("pause");
+    // }
 }
 
 void draw_hud(){
@@ -217,10 +220,13 @@ void *start_random_game(void *vargp){
 
     alloc_grid(&grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     alloc_grid(&gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    alloc_buffer(&buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // save_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    init_buffer(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     define_neighborhood(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     define_neighborhood(gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
@@ -228,13 +234,15 @@ void *start_random_game(void *vargp){
     initialize_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
 
-    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
-    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    // print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
 
     run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
+    dealloc_buffer(&buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    system("cls");
 
     return NULL; 
 }

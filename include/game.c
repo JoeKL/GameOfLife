@@ -1,5 +1,4 @@
 #include "game.h"
-#include "menu.h"
 
 uint64_t x_msws = 0, w_msws = 0;
 // Must be odd (least significant bit is "1"), and upper 64-bits non-zero
