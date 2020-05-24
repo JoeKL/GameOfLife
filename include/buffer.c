@@ -14,7 +14,7 @@ void alloc_buffer(char **buffer, const int x_size, const int y_size){
 
 void dealloc_buffer(char **buffer, const int x_size, const int y_size){
     int buffer_size = calc_buffersize(x_size, y_size);
-    for (int i = 0; i < buffer_size; i++)
+    for (int i = 0; i < buffer_size - 1; i++)
     {
         //fehler?
         free(buffer[i]);
@@ -47,23 +47,35 @@ void init_buffer(char *buffer, const int x_size, const int y_size, char symbolAl
 
 }
 
-void update_buffer(char *buffer, struct cell **grid_ptr, struct cell **gridcopy_ptr, const int x_size, const int y_size, char symbolAlive, char symbolDead){
+// void update_buffer(char *buffer, struct cell **grid_ptr, struct cell **gridcopy_ptr, const int x_size, const int y_size, char symbolAlive, char symbolDead){
 
-    for(int y = 0; y < y_size; y++){
-        for(int x = 0; x < x_size; x++){
-            if (grid_ptr[x][y].alive != gridcopy_ptr[x][y].alive) {
+//     for(int y = 0; y < y_size; y++){
+//         for(int x = 0; x < x_size; x++){
+//             if (grid_ptr[x][y].alive != gridcopy_ptr[x][y].alive) {
 
-                if (grid_ptr[x][y].alive == 1) {
+//                 if (grid_ptr[x][y].alive == 1) {
                     
-                    buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolAlive;
+//                     buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolAlive;
 
-                }else {
+//                 }else {
 
-                    buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolDead;
+//                     buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolDead;
 
-                }
+//                 }
 
-            }
-        }
+//             }
+//         }
+//     }
+// }
+
+void update_buffer_at_coord(char *buffer, const int x_size, const int y_size, char symbolAlive, char symbolDead, int x_pos, int y_pos, int alive){
+    if (alive) {
+        
+        buffer[calc_positionInBuffer(x_size, y_size, x_pos, y_pos)] = symbolAlive;
+
+    }else {
+
+        buffer[calc_positionInBuffer(x_size, y_size, x_pos, y_pos)] = symbolDead;
+
     }
 }

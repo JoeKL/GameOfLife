@@ -40,7 +40,7 @@ void init_settings();
 
 int main(){
 
-    // set_fontsize(5);
+    set_fontsize(1);
     
     console_fullscreen();
     init_settings();
@@ -105,15 +105,15 @@ void init_settings(){
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
-    gamesettings.symbolDead = '-';
+    gamesettings.symbolDead = ' ';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 300;
-    gamesettings.periodInSeconds = 10;
+    gamesettings.iterationsPerSecond = 1000;
+    gamesettings.periodInSeconds = 1;
 
     //setze grid size
-    gamesettings.gridsize.X = 117;
-    gamesettings.gridsize.Y = 57;
+    gamesettings.gridsize.X = 900;
+    gamesettings.gridsize.Y = 350;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -158,24 +158,25 @@ void tick(){
                 if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
                     refresh_neighborhood(grid[x][y], 1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
                 }
-
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
                     grid[x][y].alive = 0;
                     refresh_neighborhood(grid[x][y], -1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
                 }
-
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
                     grid[x][y].alive = 0;
                     refresh_neighborhood(grid[x][y], -1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
 
                 }
             }
         }
     }
-    update_buffer(buffer, grid, gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
+    // update_buffer(buffer, grid, gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
     print_buffer(buffer);
 
     currentGeneration++;
@@ -224,8 +225,8 @@ void *start_random_game(void *vargp){
 
     initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     // save_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    // generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     init_buffer(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     define_neighborhood(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
