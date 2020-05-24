@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include "menu.h"
 
 //max = 117x57
 #define X_Size 117

@@ -1,3 +1,11 @@
+/**
+ * Game of Life
+ * Erstellt am: 18.05.2020
+ * Game of Life gemaeß Conway
+ * 
+ * Autoren: Gummiloch, TingelTangelTepe, Rueckener
+ **/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,18 +15,13 @@
 
 #include "include/menu.h"
 #include "include/game.h"
+#include "include/buffer.h"
 
 struct settings gamesettings;
 
-// struct grid{
-//     struct cell **grid;
-//     struct cell **gridcopy;
-//     COORD gridsize;
-// } game_grid;
-
-
 struct cell **grid;
 struct cell **gridcopy;
+char *buffer;
 
 struct menu_button mainMenu_Button[3];
 struct menu_button settingsMenu_Button[5];
@@ -35,18 +38,18 @@ void draw_hud();
 void settings_menu();
 void main_menu();
 void init_settings();
-    
 
 int main(){
-
-    // set_fontsize(5);
-
-    console_fullscreen();
+    // set_fontsize(1);
+    
+    // console_fullscreen();
     init_settings();
 
     main_menu();
 
     system("pause");
+
+
     return 0;
 }
 
@@ -105,8 +108,8 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 170;
-    gamesettings.periodInSeconds = 10;
+    gamesettings.iterationsPerSecond = 100;
+    gamesettings.periodInSeconds = 1;
 
     //setze grid size
     gamesettings.gridsize.X = 117;
@@ -138,7 +141,7 @@ void tick(){
 
     aliveCells = 0;
 
-    copy_grid(gridcopy, grid,gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    copy_grid(gridcopy, grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     int x;
     int y;
@@ -155,27 +158,28 @@ void tick(){
                 if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
                     refresh_neighborhood(grid[x][y], 1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
                 }
-
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
                     grid[x][y].alive = 0;
                     refresh_neighborhood(grid[x][y], -1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
                 }
-
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
                     grid[x][y].alive = 0;
                     refresh_neighborhood(grid[x][y], -1);
+                    update_buffer_at_coord(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
 
                 }
             }
         }
     }
-    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
-    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    // update_buffer(buffer, grid, gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
+    print_buffer(buffer);
+
     currentGeneration++;
-    
     if (aliveCellsPrevGen == aliveCells) {
         iterationsSinceLastChange++;
     } else {
@@ -185,10 +189,10 @@ void tick(){
 
     aliveCellsPrevGen = aliveCells;
     
-    if (iterationsSinceLastChange >= 20){
-        printf("asdada\n");
-        system("pause");
-    }
+    // if (iterationsSinceLastChange >= 20){
+    //     printf("asdada\n");
+    //     system("pause");
+    // }
 }
 
 void draw_hud(){
@@ -217,10 +221,13 @@ void *start_random_game(void *vargp){
 
     alloc_grid(&grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     alloc_grid(&gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    alloc_buffer(&buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // save_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    init_buffer(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     define_neighborhood(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     define_neighborhood(gridcopy, gamesettings.gridsize.X, gamesettings.gridsize.Y);
@@ -228,13 +235,15 @@ void *start_random_game(void *vargp){
     initialize_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
 
-    print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
-    // print_neighbors(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
+    // print_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings);
 
     run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
+    dealloc_buffer(&buffer);
+
+    system("cls");
 
     return NULL; 
 }
