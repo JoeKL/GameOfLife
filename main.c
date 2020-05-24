@@ -148,6 +148,7 @@ void tick(){
 
             if (grid[x][y].alive) aliveCells++;
 
+            //abfragen ob es überhaupt lebende Nachbarn gibt
             if (gridcopy[x][y].livingNeighbors){
                 
                 //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
