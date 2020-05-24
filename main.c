@@ -1,3 +1,11 @@
+/**
+ * Game of Life
+ * Erstellt am: 18.05.2020
+ * Game of Life gemaeß Conway
+ * 
+ * Autoren: Gummiloch, TingelTangelTepe, Rueckener
+ **/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,13 +18,6 @@
 #include "include/buffer.h"
 
 struct settings gamesettings;
-
-// struct grid{
-//     struct cell **grid;
-//     struct cell **gridcopy;
-//     COORD gridsize;
-// } game_grid;
-
 
 struct cell **grid;
 struct cell **gridcopy;
@@ -39,17 +40,16 @@ void main_menu();
 void init_settings();
 
 int main(){
-
-    set_fontsize(1);
+    // set_fontsize(1);
     
     console_fullscreen();
     init_settings();
 
     main_menu();
 
-    set_cursor(0,6);
-
     system("pause");
+
+
     return 0;
 }
 
@@ -105,15 +105,15 @@ void init_settings(){
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
-    gamesettings.symbolDead = ' ';
+    gamesettings.symbolDead = '-';
 
     //setze base values
     gamesettings.iterationsPerSecond = 1000;
     gamesettings.periodInSeconds = 1;
 
     //setze grid size
-    gamesettings.gridsize.X = 900;
-    gamesettings.gridsize.Y = 350;
+    gamesettings.gridsize.X = 117;
+    gamesettings.gridsize.Y = 57;
 }
 
 void run_ticks(int periodInSeconds, int ticksPerSecond){
@@ -225,8 +225,8 @@ void *start_random_game(void *vargp){
 
     initialize_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     // save_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    // load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
-    generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    load_preset(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
+    // generate_random_grid(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
     init_buffer(buffer, gamesettings.gridsize.X, gamesettings.gridsize.Y, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     define_neighborhood(grid, gamesettings.gridsize.X, gamesettings.gridsize.Y);
