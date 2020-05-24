@@ -146,7 +146,7 @@ void tick(){
     for(y = 0; y < gamesettings.gridsize.Y; y++){
         for(x = 0; x < gamesettings.gridsize.X; x++){
 
-            if (grid[x][y].alive) aliveCells++;
+            aliveCells += grid[x][y].alive;
 
             //abfragen ob es überhaupt lebende Nachbarn gibt
             if (gridcopy[x][y].livingNeighbors){
