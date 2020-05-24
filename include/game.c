@@ -170,9 +170,8 @@ void define_neighborhood(struct cell ** grid_ptr, COORD gridsize){
 }
 
 
-void initialize_grid(struct cell **grid_ptr, COORD gridsize){
+void initialize_emptyGrid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
-    //erzeugen des leeren Feldes
     for(y = 0; y < gridsize.Y; y++){
         for(x = 0; x < gridsize.X; x++){
             grid_ptr[x][y].alive = 0;
@@ -182,7 +181,7 @@ void initialize_grid(struct cell **grid_ptr, COORD gridsize){
 }
 
 
-void initialize_neighbors(struct cell **grid_ptr, COORD gridsize){
+void initialize_allNeighbors(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
     for(y = 0; y < gridsize.Y; y++){

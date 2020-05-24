@@ -42,27 +42,6 @@ void init_buffer(char *buffer, COORD gridsize, char symbolAlive, char symbolDead
 
 }
 
-// void update_buffer(char *buffer, struct cell **grid_ptr, struct cell **gridcopy_ptr, const int x_size, const int y_size, char symbolAlive, char symbolDead){
-
-//     for(int y = 0; y < y_size; y++){
-//         for(int x = 0; x < x_size; x++){
-//             if (grid_ptr[x][y].alive != gridcopy_ptr[x][y].alive) {
-
-//                 if (grid_ptr[x][y].alive == 1) {
-                    
-//                     buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolAlive;
-
-//                 }else {
-
-//                     buffer[calc_positionInBuffer(x_size, y_size, x, y)] = symbolDead;
-
-//                 }
-
-//             }
-//         }
-//     }
-// }
-
 void update_buffer_at_coord(char *buffer, COORD gridsize, char symbolAlive, char symbolDead, int x_pos, int y_pos, int alive){
     if (alive) {
         

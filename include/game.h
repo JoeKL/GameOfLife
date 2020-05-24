@@ -49,10 +49,8 @@ int count_living_neighbors(struct cell grid);
 void define_neighborhood(struct cell ** grid_ptr, COORD gridsize);
 void refresh_neighborhood(struct cell grid, int value);
 
-void initialize_grid(struct cell ** grid_ptr, COORD gridsize);
-void initialize_neighbors(struct cell ** grid_ptr, COORD gridsize);
-void print_grid(struct cell ** grid_ptr, COORD gridsize, struct settings gamesettings);
-void print_neighbors(struct cell ** grid_ptr, COORD gridsize, struct settings gamesettings);
+void initialize_emptyGrid(struct cell ** grid_ptr, COORD gridsize);
+void initialize_allNeighbors(struct cell ** grid_ptr, COORD gridsize);
 
 void generate_random_grid(struct cell **grid_ptr, COORD gridsize);
 
