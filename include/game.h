@@ -43,7 +43,9 @@ void save_preset_from_grid(struct cell ** grid_ptr, COORD gridsize);
 
 int count_living_neighbors(struct cell grid);
 void define_neighborhood(struct cell ** grid_ptr, COORD gridsize);
-void refresh_neighborhood(struct cell grid, int value);
+
+void add_neighborhood(struct cell grid);
+void sub_neighborhood(struct cell grid);
 
 void initialize_empty_grid(struct cell ** grid_ptr, COORD gridsize);
 void calc_all_neighbors(struct cell ** grid_ptr, COORD gridsize);

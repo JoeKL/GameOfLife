@@ -201,12 +201,28 @@ void generate_random_grid(struct cell **grid_ptr, COORD gridsize){
     }
 }
 
-void refresh_neighborhood(struct cell grid, int value){
-    int i = 0;
-    for(i; i<8; i++){
-        if(grid.neighborCell[i] -> livingNeighbors != 0 || value > 0){
-            grid.neighborCell[i] -> livingNeighbors += value;
-        }
-    }
+
+
+void add_neighborhood(struct cell grid){
+    grid.neighborCell[0] -> livingNeighbors++;
+    grid.neighborCell[1] -> livingNeighbors++;
+    grid.neighborCell[2] -> livingNeighbors++;
+    grid.neighborCell[3] -> livingNeighbors++;
+    grid.neighborCell[4] -> livingNeighbors++;
+    grid.neighborCell[5] -> livingNeighbors++;
+    grid.neighborCell[6] -> livingNeighbors++;
+    grid.neighborCell[7] -> livingNeighbors++;
 }
+
+void sub_neighborhood(struct cell grid){
+    grid.neighborCell[0] -> livingNeighbors--;
+    grid.neighborCell[1] -> livingNeighbors--;
+    grid.neighborCell[2] -> livingNeighbors--;
+    grid.neighborCell[3] -> livingNeighbors--;
+    grid.neighborCell[4] -> livingNeighbors--;
+    grid.neighborCell[5] -> livingNeighbors--;
+    grid.neighborCell[6] -> livingNeighbors--;
+    grid.neighborCell[7] -> livingNeighbors--;
+}
+
 

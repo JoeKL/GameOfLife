@@ -108,7 +108,7 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 100;
+    gamesettings.iterationsPerSecond = 1000;
     gamesettings.periodInSeconds = 1;
 
     //setze grid size
@@ -157,26 +157,25 @@ void tick(){
                 //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
                 if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
-                    refresh_neighborhood(grid[x][y], 1);
+                    add_neighborhood(grid[x][y]); // Optimierbar
                     update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
-                }
+                } else
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
                     grid[x][y].alive = 0;
-                    refresh_neighborhood(grid[x][y], -1);
+                    sub_neighborhood(grid[x][y]); // Optimierbar
                     update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
-                }
+                } else
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
                     grid[x][y].alive = 0;
-                    refresh_neighborhood(grid[x][y], -1);
+                    sub_neighborhood(grid[x][y]); // Optimierbar
                     update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
 
                 }
             }
         }
     }
-    // update_buffer(buffer, grid, gridcopy, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
     print_buffer(buffer);
 
     currentGeneration++;
@@ -222,12 +221,12 @@ void *start_random_game(void *vargp){
     alloc_grid(&grid, gamesettings.gridsize);
     alloc_grid(&gridcopy, gamesettings.gridsize);
     alloc_buffer(&buffer, gamesettings.gridsize);
+    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     initialize_empty_grid(grid, gamesettings.gridsize);
     // save_preset_from_grid(grid, gamesettings.gridsize);
-    load_preset_to_grid(grid, gamesettings.gridsize);
-    // generate_random_grid(grid, gamesettings.gridsize);
-    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
+    // load_preset_to_grid(grid, gamesettings.gridsize);
+    generate_random_grid(grid, gamesettings.gridsize);
 
     define_neighborhood(grid, gamesettings.gridsize);
     define_neighborhood(gridcopy, gamesettings.gridsize);
