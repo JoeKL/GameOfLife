@@ -133,8 +133,6 @@ void run(int periodInSeconds, int ticksPerSecond){
         } while(cpu_time_used < (double) 1/ticksPerSecond);
         
         tick();
-        set_cursor(0, 57);
-        printf("%i", time(0) - runtime);
     }
 }
 
