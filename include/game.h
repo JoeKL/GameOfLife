@@ -8,14 +8,14 @@
 #include <windows.h>
 #include "menu.h"
 
-struct cell{
+typedef struct cell{
     int alive;
     int livingNeighbors;
     struct cell *neighborCell[8];
 };
 
 
-struct settings{
+typedef struct settings{
     
     COORD gridsize;
 

@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <string.h>
 
-struct menu_button
+typedef struct menu_button
 {
     char label[20];
     COORD pos;
