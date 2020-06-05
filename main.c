@@ -30,8 +30,9 @@ int aliveCells = 0;
 int aliveCellsPrevGen = 0;
 int currentGeneration = 0;
 int iterationsSinceLastChange = 0;
+int runtime = 0;
 
-void run_ticks(int periodInSeconds, int ticksPerSecond);
+void run(int periodInSeconds, int ticksPerSecond);
 void tick();
 
 void draw_hud();
@@ -108,22 +109,21 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 1000;
-    gamesettings.periodInSeconds = 1;
+    gamesettings.iterationsPerSecond = 60;
+    gamesettings.periodInSeconds = 3;
 
     //setze grid size
     gamesettings.gridsize.X = 117;
     gamesettings.gridsize.Y = 57;
 }
 
-void run_ticks(int periodInSeconds, int ticksPerSecond){
+void run(int periodInSeconds, int ticksPerSecond){
 
-    int tickCounter = 0;
+    runtime = time(0);
 
-    while(tickCounter < ticksPerSecond*periodInSeconds) {
+    while((time(0) - runtime) < periodInSeconds) {
         double cpu_time_used;
         clock_t start, end;
-        tickCounter++;
 
         start = clock();
         do {
@@ -131,16 +131,18 @@ void run_ticks(int periodInSeconds, int ticksPerSecond){
             cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
         } while(cpu_time_used < (double) 1/ticksPerSecond);
-
+        
         tick();
+        set_cursor(0, 57);
+        printf("%i", time(0) - runtime);
     }
 }
 
 void tick(){
-    // draw_hud();
 
     aliveCells = 0;
 
+    // kopiere das aktuelle grid
     copy_grid(gridcopy, grid, gamesettings.gridsize);
 
     int x;
@@ -149,6 +151,7 @@ void tick(){
     for(y = 0; y < gamesettings.gridsize.Y; y++){
         for(x = 0; x < gamesettings.gridsize.X; x++){
 
+            // zähle lebende Zellen beim durchgehen
             aliveCells += grid[x][y].alive;
 
             //abfragen ob es überhaupt lebende Nachbarn gibt
@@ -176,6 +179,8 @@ void tick(){
             }
         }
     }
+
+    // draw_hud();
     print_buffer(buffer);
 
     currentGeneration++;
@@ -236,7 +241,7 @@ void *start_random_game(void *vargp){
 
     // print_grid(grid, gamesettings.gridsize, gamesettings);
 
-    run_ticks(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
+    run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
