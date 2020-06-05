@@ -1,10 +1,12 @@
 /**
- * Game of Life
- * Erstellt am: 18.05.2020
- * Game of Life gemaeß Conway
+ * @file main.c
+ * @author Lothar Gomoluch, Oliver Röckener und Niko Tepe
+ * @brief 
+ * @date 05.06.2020
  * 
- * Autoren: Gummiloch, TingelTangelTepe, Rueckener
- **/
+ * @copyright Copyright (c) 2020
+ * 
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

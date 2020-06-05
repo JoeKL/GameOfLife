@@ -1,3 +1,13 @@
+/**
+ * @file menu.h
+ * @author Lothar Gomoluch, Oliver Röckener und Niko Tepe
+ * @brief 
+ * @date 05.06.2020
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #ifndef MENU_H
 #define MENU_H
 
