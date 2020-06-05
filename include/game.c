@@ -13,6 +13,11 @@ uint32_t generate_random_int_msws() {
     return x_msws = (x_msws>>32) | (x_msws<<32); // return the middle 32-bits
 }
 
+// get_time_since_start_value "misst" die Zeit seit dem übergebenen Startzeitpunkt
+int get_time_since_start_value(int start_value){
+    return (time(0) - start_value);
+}
+
 // struct cell ***grid_ptr -> deklariere "grid" als pointer to pointer to pointer to struct cell 
 // alloc_grid reserviert den Speicher des Feldes
 void alloc_grid(struct cell ***grid_ptr, COORD gridsize){

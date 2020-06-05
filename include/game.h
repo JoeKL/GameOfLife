@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <windows.h>
 #include "menu.h"
 
@@ -33,6 +34,8 @@ struct settings{
 };
 
 uint32_t generate_random_int_msws();
+
+int get_time_since_start_value(int start_value);
 
 void alloc_grid(struct cell *** grid_ptr, COORD gridsize);
 void dealloc_grid(struct cell *** grid_ptr, const int x_size);

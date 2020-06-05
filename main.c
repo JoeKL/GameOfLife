@@ -30,7 +30,7 @@ int aliveCells = 0;
 int aliveCellsPrevGen = 0;
 int currentGeneration = 0;
 int iterationsSinceLastChange = 0;
-int runtime = 0;
+int runtime_start = 0;
 
 void run(int periodInSeconds, int ticksPerSecond);
 void tick();
@@ -110,7 +110,7 @@ void init_settings(){
 
     //setze base values
     gamesettings.iterationsPerSecond = 60;
-    gamesettings.periodInSeconds = 3;
+    gamesettings.periodInSeconds = 10;
 
     //setze grid size
     gamesettings.gridsize.X = 117;
@@ -119,9 +119,9 @@ void init_settings(){
 
 void run(int periodInSeconds, int ticksPerSecond){
 
-    runtime = time(0);
+    runtime_start = time(0);
 
-    while((time(0) - runtime) < periodInSeconds) {
+    while(get_time_since_start_value(runtime_start) < periodInSeconds) {
         double cpu_time_used;
         clock_t start, end;
 
@@ -178,7 +178,7 @@ void tick(){
         }
     }
 
-    // draw_hud();
+    draw_hud();
     print_buffer(buffer);
 
     currentGeneration++;
@@ -187,34 +187,30 @@ void tick(){
     } else {
         iterationsSinceLastChange = 0;
     }
-    
 
     aliveCellsPrevGen = aliveCells;
     
-    // if (iterationsSinceLastChange >= 20){
-    //     printf("asdada\n");
-    //     system("pause");
-    // }
+    if (iterationsSinceLastChange >= 20){
+        printf("asdada\n");
+        system("pause");
+    }
 }
 
 void draw_hud(){
-    
     set_cursor(gamesettings.hud_currentGeneration_pos.X, gamesettings.hud_currentGeneration_pos.Y);
-    printf("generation: %d of %d", currentGeneration, gamesettings.iterationsPerSecond*gamesettings.periodInSeconds);
+    printf("generation: %d", currentGeneration);
 
     set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
     printf("cells alive: %d of %d  ", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.Y);
     
     set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
-    printf("grid size: %dx%d", gamesettings.gridsize);
+    printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
 
     set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
-    printf("periodInSeconds: %ds", gamesettings.periodInSeconds);
+    printf("time: %ds of %ds", get_time_since_start_value(runtime_start), gamesettings.periodInSeconds);
 
     set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
     printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
-
-    set_cursor(0,0);
 }
 
 void *start_random_game(void *vargp){
