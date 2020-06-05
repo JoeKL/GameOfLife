@@ -133,6 +133,7 @@ void run(int periodInSeconds, int ticksPerSecond){
         } while(cpu_time_used < (double) 1/ticksPerSecond);
         
         tick();
+
     }
 }
 
@@ -181,6 +182,7 @@ void tick(){
     draw_hud();
     print_buffer(buffer);
 
+    // ++++++++ EndCondition ++++++++
     currentGeneration++;
     if (aliveCellsPrevGen == aliveCells) {
         iterationsSinceLastChange++;
@@ -194,6 +196,7 @@ void tick(){
         printf("asdada\n");
         system("pause");
     }
+    // -------- EndCondition --------
 }
 
 void draw_hud(){
