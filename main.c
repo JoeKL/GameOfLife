@@ -334,14 +334,12 @@ void main_menu(){
                 //UP
                 case 72:
                         set_cursor(0,0);
-                        // printf("u %d", main_menu_cursor_position);
                         main_menu_cursor_position--;
                     break;
 
                 //DOWN
                 case 80:
                         set_cursor(0,0);
-                        // printf("d %d", main_menu_cursor_position);
                         main_menu_cursor_position++;
                     break;
 
