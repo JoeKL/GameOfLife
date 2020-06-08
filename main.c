@@ -25,7 +25,7 @@ struct cell **grid;
 struct cell **gridcopy;
 char *buffer;
 
-struct menu_button mainMenu_Button[3];
+struct menu_button mainMenu_Button[4];
 struct menu_button settingsMenu_Button[6];
 
 int aliveCells = 0;
@@ -79,9 +79,13 @@ void init_settings(){
     mainMenu_Button[1].pos.X = 110;
     mainMenu_Button[1].pos.Y = 22;
 
-    strcpy(mainMenu_Button[2].label, "exit");
+    strcpy(mainMenu_Button[2].label, "rules");
     mainMenu_Button[2].pos.X = 110;
     mainMenu_Button[2].pos.Y = 24;
+
+    strcpy(mainMenu_Button[3].label, "exit");
+    mainMenu_Button[3].pos.X = 110;
+    mainMenu_Button[3].pos.Y = 26;
 
     //setze Settings Menu Buttons
 
@@ -195,6 +199,8 @@ void tick(int *end_game){
     print_buffer(buffer);
 
     // +++++++ KeyStonks +++++++
+
+        //Keystrokes in neuem Thread abfangen?
 
     // ------- KeyStonks -------
 
@@ -407,6 +413,9 @@ void main_menu(){
                             break;
                             
                         case 2:
+                            break;
+                            
+                        case 3:
                             exit(0);
                             break;
                     }
