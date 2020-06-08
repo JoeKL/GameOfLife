@@ -74,44 +74,44 @@ void init_settings(){
 
     //setze Main Menu Buttons
     strcpy(mainMenu_Button[0].label, "start");
-    mainMenu_Button[0].pos.X = 10;
-    mainMenu_Button[0].pos.Y = 10;
+    mainMenu_Button[0].pos.X = 110;
+    mainMenu_Button[0].pos.Y = 20;
     
     strcpy(mainMenu_Button[1].label, "settings");
-    mainMenu_Button[1].pos.X = 10;
-    mainMenu_Button[1].pos.Y = 12;
+    mainMenu_Button[1].pos.X = 110;
+    mainMenu_Button[1].pos.Y = 22;
 
     strcpy(mainMenu_Button[2].label, "exit");
-    mainMenu_Button[2].pos.X = 10;
-    mainMenu_Button[2].pos.Y = 14;
+    mainMenu_Button[2].pos.X = 110;
+    mainMenu_Button[2].pos.Y = 24;
 
     //setze Settings Menu Buttons
     strcpy(settingsMenu_Button[0].label, "currentGeneration");
-    settingsMenu_Button[0].pos.X = 24;
-    settingsMenu_Button[0].pos.Y = 10;
+    settingsMenu_Button[0].pos.X = 124;
+    settingsMenu_Button[0].pos.Y = 20;
     
     strcpy(settingsMenu_Button[1].label, "aliveCells");
-    settingsMenu_Button[1].pos.X = 24;
-    settingsMenu_Button[1].pos.Y = 12;
+    settingsMenu_Button[1].pos.X = 124;
+    settingsMenu_Button[1].pos.Y = 22;
 
     strcpy(settingsMenu_Button[2].label, "periodInSeconds");
-    settingsMenu_Button[2].pos.X = 24;
-    settingsMenu_Button[2].pos.Y = 14;
+    settingsMenu_Button[2].pos.X = 124;
+    settingsMenu_Button[2].pos.Y = 24;
 
     strcpy(settingsMenu_Button[3].label, "iterationsPerSecond");
-    settingsMenu_Button[3].pos.X = 24;
-    settingsMenu_Button[3].pos.Y = 16;
+    settingsMenu_Button[3].pos.X = 124;
+    settingsMenu_Button[3].pos.Y = 26;
 
     strcpy(settingsMenu_Button[4].label, "gridSize");
-    settingsMenu_Button[4].pos.X = 24;
-    settingsMenu_Button[4].pos.Y = 18;
+    settingsMenu_Button[4].pos.X = 124;
+    settingsMenu_Button[4].pos.Y = 28;
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 60;
+    gamesettings.iterationsPerSecond = 2000;
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
@@ -322,10 +322,11 @@ void settings_menu(){
 void main_menu(){
 
     int main_menu_cursor_position = 0;
+   
 
     while (1)
     {
-        
+        print_logo(86, 10);
         draw_menu(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]));
 
         set_menucursor(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), main_menu_cursor_position);

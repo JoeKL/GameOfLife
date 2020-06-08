@@ -18,14 +18,14 @@
 #include <windows.h>
 #include "menu.h"
 
-typedef struct cell{
+struct cell{
     int alive;
     int livingNeighbors;
     struct cell *neighborCell[8];
 };
 
 
-typedef struct settings{
+struct settings{
     
     COORD gridsize;
 

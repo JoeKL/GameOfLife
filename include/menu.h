@@ -15,11 +15,13 @@
 #include <cstdio>
 #include <string.h>
 
-typedef struct menu_button
+struct menu_button
 {
     char label[20];
     COORD pos;
 };
+
+void print_logo(int x, int y);
 
 void set_cursor(int x, int y);
 void set_fontsize(int size);
