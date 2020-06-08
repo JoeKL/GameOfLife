@@ -117,3 +117,30 @@ void revive_buffer_at_coord(char *buffer, struct settings gamesettings, int x_po
 void kill_buffer_at_coord(char *buffer, struct settings gamesettings, int x_pos, int y_pos){
     buffer[calc_position_in_buffer(gamesettings.gridsize, x_pos, y_pos)] = gamesettings.symbolDead;
 }
+
+/**
+ * @brief 
+ * 
+ * @param gamesettings 
+ * @param aliveCells 
+ * @param currentGeneration 
+ */
+void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneration, int runtime_start){
+    set_cursor(gamesettings.hud_currentGeneration_pos.X, gamesettings.hud_currentGeneration_pos.Y);
+    printf("generation: %d", currentGeneration);
+
+    set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
+    printf("cells alive: %d of %d  ", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.Y);
+    
+    set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
+    printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
+
+    set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
+    printf("time: %ds of %ds", get_time_since_start_value(runtime_start), gamesettings.periodInSeconds);
+
+    set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
+    printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
+
+    set_cursor(gamesettings.hud_shortcutInfo_pos.X, gamesettings.hud_shortcutInfo_pos.Y);
+    printf("|\t'ESC' to end game\t|\t'SPACE' to pause game\t|\t'S' to save currrent state as preset\t|");
+}

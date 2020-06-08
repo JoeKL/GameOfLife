@@ -44,7 +44,6 @@ void main_menu();
 void init_settings();
 
 int main(){
-    // set_fontsize(1);
 
     // SetConsoleTitle((LPCTSTR) "Game of Life");
     
@@ -208,27 +207,26 @@ void tick(int *end_game){
         }
     }
 
-    draw_hud();
+    draw_hud(gamesettings, aliveCells, currentGeneration, runtime_start);
     print_buffer(buffer);
 
     // +++++++ KeyStonks +++++++
-        //Keystrokes in neuem Thread abfangen?
 
     if (kbhit()){
         int ch = _getch();
         
         if(ch == 27){
 
-            //if *ESC* then end game
+            //wenn *ESC* dann end game
             *end_game = 1;
 
         } else if(ch == 32){
 
-            //if *space* then pause game
+            //wenn *space* dann pause game
             
         } else if(ch == 115){
 
-            //if *s* then save game as preset
+            //wenn *s* dann save gamestate in preset
             save_preset_from_grid(grid, gamesettings.gridsize);
             set_cursor(0, 58);
             printf("generation %i has been saved as 'preset.txt'", currentGeneration);
@@ -241,6 +239,7 @@ void tick(int *end_game){
 
     // ++++++++ EndCondition ++++++++
     currentGeneration++;
+
     if (aliveCellsPrevGen == aliveCells) {
         iterationsSinceLastChange++;
     } else {
@@ -249,33 +248,15 @@ void tick(int *end_game){
 
     aliveCellsPrevGen = aliveCells;
     
+    //spiel wird anch 20 iterationen mit der gleichen anzahl lebender Zellen abgebrochen
     if (iterationsSinceLastChange >= 20){
        *end_game = 1;
     }
     // -------- EndCondition --------
 }
 
-void draw_hud(){
-    set_cursor(gamesettings.hud_currentGeneration_pos.X, gamesettings.hud_currentGeneration_pos.Y);
-    printf("generation: %d", currentGeneration);
 
-    set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
-    printf("cells alive: %d of %d  ", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.Y);
-    
-    set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
-    printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
-
-    set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
-    printf("time: %ds of %ds", get_time_since_start_value(runtime_start), gamesettings.periodInSeconds);
-
-    set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
-    printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
-
-    set_cursor(gamesettings.hud_shortcutInfo_pos.X, gamesettings.hud_shortcutInfo_pos.Y);
-    printf("|\t'ESC' to end game\t|\t'SPACE' to pause game\t|\t'S' to save currrent state as preset\t|");
-}
-
-void *start_random_game(void *vargp){
+void start_game(int is_random){
 
     currentGeneration = 0;
 
@@ -285,50 +266,23 @@ void *start_random_game(void *vargp){
     initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
 
     initialize_empty_grid(grid, gamesettings.gridsize);
-    // save_preset_from_grid(grid, gamesettings.gridsize);
-    // load_preset_to_grid(grid, gamesettings.gridsize);
-    generate_random_grid(grid, gamesettings.gridsize);
+
+    if(is_random == 1){
+        generate_random_grid(grid, gamesettings.gridsize);
+    } else {
+        load_preset_to_grid(grid, gamesettings.gridsize);
+    }
 
     define_neighborhood(grid, gamesettings.gridsize);
     define_neighborhood(gridcopy, gamesettings.gridsize);
 
     calc_all_neighbors(grid, gamesettings.gridsize);
 
-
-    // print_grid(grid, gamesettings.gridsize, gamesettings);
-
     run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
     dealloc_buffer(&buffer);
-
-    return NULL; 
-}
-
-void *start_preset_game(void *vargp){
-
-    currentGeneration = 0;
-
-    alloc_grid(&grid, gamesettings.gridsize);
-    alloc_grid(&gridcopy, gamesettings.gridsize);
-    alloc_buffer(&buffer, gamesettings.gridsize);
-    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
-
-    initialize_empty_grid(grid, gamesettings.gridsize);
-    
-    load_preset_to_grid(grid, gamesettings.gridsize);
-    define_neighborhood(grid, gamesettings.gridsize);
-    define_neighborhood(gridcopy, gamesettings.gridsize);
-    calc_all_neighbors(grid, gamesettings.gridsize);
-
-    run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
-    
-    dealloc_grid(&grid, gamesettings.gridsize.X);
-    dealloc_grid(&gridcopy, gamesettings.gridsize.X);
-    dealloc_buffer(&buffer);
-
-    return NULL; 
 }
 
 void settings_menu(){
@@ -461,9 +415,7 @@ void start_menu(){
                     {
                         case 0:
                             system("cls");
-                            pthread_t thread_0;
-                            pthread_create(&thread_0, NULL, start_random_game, NULL); 
-                            pthread_join(thread_0, NULL);   
+                            start_game(1);  
                             system("cls");  
 
                             refresh_menu = 0;
@@ -471,9 +423,7 @@ void start_menu(){
                         
                         case 1:
                             system("cls");
-                            pthread_t thread_1;
-                            pthread_create(&thread_1, NULL, start_preset_game, NULL); 
-                            pthread_join(thread_1, NULL);   
+                            start_game(0);  
                             system("cls");  
 
                             refresh_menu = 0;
