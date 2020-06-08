@@ -26,6 +26,7 @@ struct cell **gridcopy;
 char *buffer;
 
 struct menu_button mainMenu_Button[4];
+struct menu_button startMenu_Button[2];
 struct menu_button settingsMenu_Button[6];
 
 int aliveCells = 0;
@@ -44,6 +45,8 @@ void init_settings();
 
 int main(){
     // set_fontsize(1);
+
+    // SetConsoleTitle((LPCTSTR) "Game of Life");
     
     console_fullscreen();
     init_settings();
@@ -61,14 +64,16 @@ void init_settings(){
     //setze hud koordinaten
     gamesettings.hud_currentGeneration_pos.X = 10;
     gamesettings.hud_currentGeneration_pos.Y = 57;
-    gamesettings.hud_aliveCells_pos.X = 10;
-    gamesettings.hud_aliveCells_pos.Y = 58;
-    gamesettings.hud_periodInSeconds_pos.X = 50;
+    gamesettings.hud_aliveCells_pos.X = 50;
+    gamesettings.hud_aliveCells_pos.Y = 57;
+    gamesettings.hud_periodInSeconds_pos.X = 100;
     gamesettings.hud_periodInSeconds_pos.Y = 57;
-    gamesettings.hud_iterationsPerSecond_pos.X = 50;
-    gamesettings.hud_iterationsPerSecond_pos.Y = 58;
-    gamesettings.hud_gridSize_pos.X = 50;
-    gamesettings.hud_gridSize_pos.Y = 59;
+    gamesettings.hud_iterationsPerSecond_pos.X = 150;
+    gamesettings.hud_iterationsPerSecond_pos.Y = 57;
+    gamesettings.hud_gridSize_pos.X = 200;
+    gamesettings.hud_gridSize_pos.Y = 57;
+    gamesettings.hud_shortcutInfo_pos.X = 0;
+    gamesettings.hud_shortcutInfo_pos.Y = 59;
 
     //setze Main Menu Buttons
     strcpy(mainMenu_Button[0].label, "start");
@@ -87,8 +92,16 @@ void init_settings(){
     mainMenu_Button[3].pos.X = 110;
     mainMenu_Button[3].pos.Y = 26;
 
-    //setze Settings Menu Buttons
+    //setze start menu buttons
+    strcpy(startMenu_Button[0].label, "random");
+    startMenu_Button[0].pos.X = 124;
+    startMenu_Button[0].pos.Y = 20;
 
+    strcpy(startMenu_Button[1].label, "preset");
+    startMenu_Button[1].pos.X = 124;
+    startMenu_Button[1].pos.Y = 22;
+
+    //setze Settings Menu Buttons
     strcpy(settingsMenu_Button[0].label, "gridSizeX");
     settingsMenu_Button[0].pos.X = 124;
     settingsMenu_Button[0].pos.Y = 20;
@@ -199,8 +212,30 @@ void tick(int *end_game){
     print_buffer(buffer);
 
     // +++++++ KeyStonks +++++++
-
         //Keystrokes in neuem Thread abfangen?
+
+    if (kbhit()){
+        int ch = _getch();
+        
+        if(ch == 27){
+
+            //if *ESC* then end game
+            *end_game = 1;
+
+        } else if(ch == 32){
+
+            //if *space* then pause game
+            
+        } else if(ch == 115){
+
+            //if *s* then save game as preset
+            save_preset_from_grid(grid, gamesettings.gridsize);
+            set_cursor(0, 58);
+            printf("generation %i has been saved as 'preset.txt'", currentGeneration);
+
+        }
+        
+    }
 
     // ------- KeyStonks -------
 
@@ -235,6 +270,9 @@ void draw_hud(){
 
     set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
     printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
+
+    set_cursor(gamesettings.hud_shortcutInfo_pos.X, gamesettings.hud_shortcutInfo_pos.Y);
+    printf("|\t'ESC' to end game\t|\t'SPACE' to pause game\t|\t'S' to save currrent state as preset\t|");
 }
 
 void *start_random_game(void *vargp){
@@ -261,6 +299,31 @@ void *start_random_game(void *vargp){
 
     run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
 
+    dealloc_grid(&grid, gamesettings.gridsize.X);
+    dealloc_grid(&gridcopy, gamesettings.gridsize.X);
+    dealloc_buffer(&buffer);
+
+    return NULL; 
+}
+
+void *start_preset_game(void *vargp){
+
+    currentGeneration = 0;
+
+    alloc_grid(&grid, gamesettings.gridsize);
+    alloc_grid(&gridcopy, gamesettings.gridsize);
+    alloc_buffer(&buffer, gamesettings.gridsize);
+    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
+
+    initialize_empty_grid(grid, gamesettings.gridsize);
+    
+    load_preset_to_grid(grid, gamesettings.gridsize);
+    define_neighborhood(grid, gamesettings.gridsize);
+    define_neighborhood(gridcopy, gamesettings.gridsize);
+    calc_all_neighbors(grid, gamesettings.gridsize);
+
+    run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
+    
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
     dealloc_buffer(&buffer);
@@ -352,11 +415,97 @@ void settings_menu(){
 
 }
 
+void start_menu(){
+
+    int start_menu_cursor_position = 0;
+
+    int refresh_menu = 1;
+    while (refresh_menu == 1)
+    {
+        draw_menu(startMenu_Button, sizeof(startMenu_Button)/sizeof(startMenu_Button[0]));
+
+        set_menucursor(startMenu_Button, sizeof(startMenu_Button)/sizeof(startMenu_Button[0]), start_menu_cursor_position);
+
+        int ch = _getch();
+        if (ch == 0 || ch == 224)
+        {
+            switch (_getch())
+            {
+                //UP
+                case 72:
+                        start_menu_cursor_position--;
+                    break;
+
+                //DOWN
+                case 80:
+                        start_menu_cursor_position++;
+                    break;
+
+                //LEFT
+                case 75:
+                    break;
+                                    
+                //RIGHT
+                case 77:
+                    break;
+
+
+            }
+        } else {
+            switch (ch)
+            {
+                //ENTER
+                case 13:
+                    
+                    switch (start_menu_cursor_position)
+                    {
+                        case 0:
+                            system("cls");
+                            pthread_t thread_0;
+                            pthread_create(&thread_0, NULL, start_random_game, NULL); 
+                            pthread_join(thread_0, NULL);   
+                            system("cls");  
+
+                            refresh_menu = 0;
+                            break;
+                        
+                        case 1:
+                            system("cls");
+                            pthread_t thread_1;
+                            pthread_create(&thread_1, NULL, start_preset_game, NULL); 
+                            pthread_join(thread_1, NULL);   
+                            system("cls");  
+
+                            refresh_menu = 0;
+                            break;
+                    }
+
+                    break;
+                //ESC
+                case 27:
+                    refresh_menu = 0;
+                    system("cls");
+                    break;
+            }
+        }
+
+        
+        if(start_menu_cursor_position < 0){
+            start_menu_cursor_position = 0;
+        }
+
+        if(start_menu_cursor_position > sizeof(startMenu_Button)/sizeof(startMenu_Button[0]) - 1){
+            start_menu_cursor_position = sizeof(startMenu_Button)/sizeof(startMenu_Button[0]) - 1;
+        }
+
+    }
+
+}
+
 void main_menu(){
 
     int main_menu_cursor_position = 0;
    
-
     while (1)
     {
         print_logo(86, 10);
@@ -371,13 +520,11 @@ void main_menu(){
             {
                 //UP
                 case 72:
-                        set_cursor(0,0);
                         main_menu_cursor_position--;
                     break;
 
                 //DOWN
                 case 80:
-                        set_cursor(0,0);
                         main_menu_cursor_position++;
                     break;
 
@@ -399,13 +546,8 @@ void main_menu(){
 
                     switch (main_menu_cursor_position)
                     {
-                        case 0:
-                            // run = 0;
-                            system("cls");
-                            pthread_t thread_id;
-                            pthread_create(&thread_id, NULL, start_random_game, NULL); 
-                            pthread_join(thread_id, NULL);   
-                            system("cls");                
+                        case 0:      
+                            start_menu();
                             break;
                         
                         case 1:

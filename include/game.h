@@ -40,7 +40,7 @@ struct settings{
     COORD hud_periodInSeconds_pos;
     COORD hud_iterationsPerSecond_pos;
     COORD hud_aliveCells_pos;
-    
+    COORD hud_shortcutInfo_pos;
 };
 
 uint32_t generate_random_int_msws();

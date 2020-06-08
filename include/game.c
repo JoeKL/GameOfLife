@@ -104,16 +104,15 @@ void load_preset_to_grid(struct cell ** grid_ptr, COORD gridsize){
     int x, y;
 
     if(fp == NULL) {
-        printf("Datei konnte nicht geoeffnet werden.\n");
-    }else {
-        for(y = 0; y < gridsize.Y; y++){
-            for(x = 0; x < gridsize.X; x++){
-                fscanf(fp, "%d ", &tempalive);
-                grid_ptr[x][y].alive = tempalive;
-            }
-        }
-	fclose(fp);
+        save_preset_from_grid(grid_ptr, gridsize);
     }
+    for(y = 0; y < gridsize.Y; y++){
+        for(x = 0; x < gridsize.X; x++){
+            fscanf(fp, "%d ", &tempalive);
+            grid_ptr[x][y].alive = tempalive;
+        }
+    }
+	fclose(fp);
 }
 
 /**
