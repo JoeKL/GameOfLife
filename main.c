@@ -35,7 +35,7 @@ int iterationsSinceLastChange = 0;
 int runtime_start = 0;
 
 void run(int periodInSeconds, int ticksPerSecond);
-void tick();
+void tick(int *end_game);
 
 void draw_hud();
 void settings_menu();
@@ -123,6 +123,9 @@ void run(int periodInSeconds, int ticksPerSecond){
 
     runtime_start = time(0);
 
+    // Variable wird in der Funktion tick() auf 1 gesetzt um das aktuelle Spiel zu beenden
+    int end_game = 0;
+
     while(get_time_since_start_value(runtime_start) < periodInSeconds) {
         double cpu_time_used;
         clock_t start, end;
@@ -134,12 +137,17 @@ void run(int periodInSeconds, int ticksPerSecond){
 
         } while(cpu_time_used < (double) 1/ticksPerSecond);
         
-        tick();
+        tick(&end_game);
+
+        // wenn end_game == 1 dann breche aus der While-Schleife
+        if(end_game) {
+            break;
+        }
 
     }
 }
 
-void tick(){
+void tick(int *end_game){
 
     aliveCells = 0;
 
@@ -194,8 +202,7 @@ void tick(){
     aliveCellsPrevGen = aliveCells;
     
     if (iterationsSinceLastChange >= 20){
-        printf("asdada\n");
-        system("pause");
+       *end_game = 1;
     }
     // -------- EndCondition --------
 }
