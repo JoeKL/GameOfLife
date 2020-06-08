@@ -78,13 +78,17 @@ void initialize_buffer(char *buffer, COORD gridsize, char symbolAlive, char symb
     for(int y = 0; y < gridsize.Y; y++){
         for(int x = 0; x < gridsize.X; x++){
 
+            //Wenn am letzten Zeichen der Reihe,...
             if(x == gridsize.X - 1){
+                //... dann speichere ohne Leerzeichen
                written_chars += snprintf(buffer + written_chars, buffer_size,"%c", symbolDead);
             } else {
+                // sonst mit Leerzeichen
                written_chars += snprintf(buffer + written_chars, buffer_size,"%c ", symbolDead);
             }
 
         }
+        // als letztes Zeichen jeder Reihe im Buffer wird ein Umbruch gesetzt
         written_chars += snprintf(buffer + written_chars, buffer_size,"\n");
     }
 
