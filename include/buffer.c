@@ -95,24 +95,25 @@ void initialize_buffer(char *buffer, COORD gridsize, char symbolAlive, char symb
 }
 
 /**
- * @brief 
+ * @brief Sets the char in buffer at coord to symbolAlive
  * 
  * @param buffer 
- * @param gridsize 
- * @param symbolAlive 
- * @param symbolDead 
+ * @param gamesettings 
  * @param x_pos 
  * @param y_pos 
- * @param alive 
  */
-void update_buffer_at_coord(char *buffer, COORD gridsize, char symbolAlive, char symbolDead, int x_pos, int y_pos, int alive){
-    if (alive) {
-        
-        buffer[calc_position_in_buffer(gridsize, x_pos, y_pos)] = symbolAlive;
+void revive_buffer_at_coord(char *buffer, struct settings gamesettings, int x_pos, int y_pos){
+    buffer[calc_position_in_buffer(gamesettings.gridsize, x_pos, y_pos)] = gamesettings.symbolAlive;
+}
 
-    }else {
-
-        buffer[calc_position_in_buffer(gridsize, x_pos, y_pos)] = symbolDead;
-
-    }
+/**
+ * @brief Sets the char in buffer at coord to symbolDead
+ * 
+ * @param buffer 
+ * @param gamesettings 
+ * @param x_pos 
+ * @param y_pos 
+ */
+void kill_buffer_at_coord(char *buffer, struct settings gamesettings, int x_pos, int y_pos){
+    buffer[calc_position_in_buffer(gamesettings.gridsize, x_pos, y_pos)] = gamesettings.symbolDead;
 }

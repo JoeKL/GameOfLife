@@ -162,20 +162,19 @@ void tick(){
                 if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
                     add_neighborhood(grid[x][y]); 
-                    update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
+                    revive_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
-                    update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
+                    kill_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
                 if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
-                    update_buffer_at_coord(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead, x, y, grid[x][y].alive);
-
+                    kill_buffer_at_coord(buffer, gamesettings, x, y);
                 }
             }
         }
