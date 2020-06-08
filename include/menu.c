@@ -131,7 +131,7 @@ void set_menucursor(struct menu_button Menu_Button[3], int array_length, int pos
 }
 
 void print_logo(int x, int y){
-    
+
     set_cursor(x, y);
     printf("   ____                               __   _     _  __  ");
 
@@ -146,4 +146,7 @@ void print_logo(int x, int y){
 
     set_cursor(x, y+4);
     printf("  \\____|\\__,_|_| |_| |_|\\___|  \\___/|_|   |_____|_|_|  \\___|");
+
+    set_cursor(x, y+5);
+    printf("  by Lothar G., Oliver R. and Niko T.");
 }
