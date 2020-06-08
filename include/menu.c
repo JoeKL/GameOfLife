@@ -75,6 +75,107 @@ void draw_menu(struct menu_button Menu_Button[5], int array_length){
 }
 
 /**
+ * @brief 
+ * 
+ * @param Menu_Button 
+ * @param array_length 
+ */
+void draw_menu_values(struct menu_button Menu_Button[5], int array_length, struct settings gamesettings){
+ 
+    for (int i = 0; i < array_length; i++){
+
+        set_cursor(Menu_Button[i].pos.X + sizeof(Menu_Button[i].label), Menu_Button[i].pos.Y);
+
+
+        switch (i)
+        {
+            case 0:
+                printf(" = %d", gamesettings.gridsize.X);
+                break;
+            
+            case 1:
+                printf(" = %d", gamesettings.gridsize.Y);
+                break;
+
+            case 2:
+                printf(" = %d", gamesettings.periodInSeconds);
+                break;
+
+            case 3:
+                printf(" = %d", gamesettings.iterationsPerSecond);
+                break;            
+
+            case 4:
+                printf(" = '%c'", gamesettings.symbolAlive);
+                break;
+
+            case 5:
+                printf(" = '%c'", gamesettings.symbolDead);
+                break;
+        }
+    }
+
+}
+
+/**
+ * @brief 
+ * 
+ * @param cursor_pos 
+ * @return int 
+ */
+int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos){
+
+        switch (cursor_pos)
+        {
+            case 0:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%hu", &gamesettings->gridsize.X);
+                fflush(stdin);
+                break;
+            
+            case 1:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%hu", &gamesettings->gridsize.Y);
+                fflush(stdin);
+                break;
+
+            case 2:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%i", &gamesettings->periodInSeconds);
+                fflush(stdin);
+                break;
+
+            case 3:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%i", &gamesettings->iterationsPerSecond);
+                fflush(stdin);
+                break;            
+
+            case 4:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%c", &gamesettings->symbolAlive);
+                fflush(stdin);
+                break;
+
+            case 5:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%c", &gamesettings->symbolDead);
+                fflush(stdin);
+                break;
+        }
+
+
+    return 0;
+}
+
+void set_value_cursor(struct menu_button Menu_Button[5], int cursor_pos){
+    set_cursor(Menu_Button[cursor_pos].pos.X + sizeof(Menu_Button[cursor_pos].label) + 2, Menu_Button[cursor_pos].pos.Y);
+    printf("          ");
+    set_cursor(Menu_Button[cursor_pos].pos.X + sizeof(Menu_Button[cursor_pos].label) + 3, Menu_Button[cursor_pos].pos.Y);
+}
+
+
+/**
  * @brief draws the cursor on a specific coord
  * 
  * @param cords

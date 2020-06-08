@@ -26,7 +26,7 @@ struct cell **gridcopy;
 char *buffer;
 
 struct menu_button mainMenu_Button[3];
-struct menu_button settingsMenu_Button[5];
+struct menu_button settingsMenu_Button[6];
 
 int aliveCells = 0;
 int aliveCellsPrevGen = 0;
@@ -51,8 +51,6 @@ int main(){
     main_menu();
 
     system("pause");
-
-
     return 0;
 }
 
@@ -86,11 +84,12 @@ void init_settings(){
     mainMenu_Button[2].pos.Y = 24;
 
     //setze Settings Menu Buttons
-    strcpy(settingsMenu_Button[0].label, "currentGeneration");
+
+    strcpy(settingsMenu_Button[0].label, "gridSizeX");
     settingsMenu_Button[0].pos.X = 124;
     settingsMenu_Button[0].pos.Y = 20;
-    
-    strcpy(settingsMenu_Button[1].label, "aliveCells");
+
+    strcpy(settingsMenu_Button[1].label, "gridSizeY");
     settingsMenu_Button[1].pos.X = 124;
     settingsMenu_Button[1].pos.Y = 22;
 
@@ -102,9 +101,14 @@ void init_settings(){
     settingsMenu_Button[3].pos.X = 124;
     settingsMenu_Button[3].pos.Y = 26;
 
-    strcpy(settingsMenu_Button[4].label, "gridSize");
+    strcpy(settingsMenu_Button[4].label, "symbolAlive");
     settingsMenu_Button[4].pos.X = 124;
     settingsMenu_Button[4].pos.Y = 28;
+    
+    strcpy(settingsMenu_Button[5].label, "symbolDead");
+    settingsMenu_Button[5].pos.X = 124;
+    settingsMenu_Button[5].pos.Y = 30;
+
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
@@ -143,7 +147,6 @@ void run(int periodInSeconds, int ticksPerSecond){
         if(end_game) {
             break;
         }
-
     }
 }
 
@@ -190,6 +193,10 @@ void tick(int *end_game){
 
     draw_hud();
     print_buffer(buffer);
+
+    // +++++++ KeyStonks +++++++
+
+    // ------- KeyStonks -------
 
     // ++++++++ EndCondition ++++++++
     currentGeneration++;
@@ -252,8 +259,6 @@ void *start_random_game(void *vargp){
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
     dealloc_buffer(&buffer);
 
-    system("cls");
-
     return NULL; 
 }
 
@@ -264,6 +269,8 @@ void settings_menu(){
     while (refresh_menu == 1)
     {
         draw_menu(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]));
+        draw_menu_values(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), gamesettings);
+        
         set_menucursor(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), settings_menu_cursor_position);
 
         int ch = _getch();
@@ -292,15 +299,29 @@ void settings_menu(){
                     switch (settings_menu_cursor_position)
                     {
                         case 0:
-                            
+                            //%hu == short unsigned
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
                         
                         case 1:
-                            
+                            //%hu == short unsigned
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);    
                             break;
                             
                         case 2:
-                            
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            break;
+
+                        case 3:
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            break;
+
+                        case 4:
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            break;
+
+                        case 5:
+                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
                     }
 
