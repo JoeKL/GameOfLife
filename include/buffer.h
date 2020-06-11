@@ -28,7 +28,7 @@ void kill_buffer_at_coord(char *buffer, struct settings gamesettings, int x_pos,
 int calc_buffer_size(COORD gridsize);
 int calc_position_in_buffer( COORD gridsize, const int x_pos, const int y_pos);
 
-void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneration, int runtime_start);
+void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneration, int generationsToCalc);
 
 void print_buffer(char *buffer);
 

@@ -23,17 +23,6 @@ uint32_t generate_random_int_msws() {
 }
 
 /**
- * @brief Get the time since start value object
- * 
- * @param start_value 
- * @return int 
- */
-int get_time_since_start_value(int start_value){
-    return (time(0) - start_value);
-}
-
-
-/**
  * @brief alloc_grid reserviert den Speicher des Feldes
  * struct cell ***grid_ptr -> deklariere "grid" als pointer to pointer to pointer to struct cell 
  * 

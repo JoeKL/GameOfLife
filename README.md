@@ -26,15 +26,15 @@ struct settings{
     char symbolAlive;
     char symbolDead;
 
-    int periodInSeconds;
+    int generationsToCalc;
     int iterationsPerSecond;
 
     COORD hud_currentGeneration_pos;  
     COORD hud_gridSize_pos;
-    COORD hud_periodInSeconds_pos;
+    COORD hud_generationsToCalc_pos;
     COORD hud_iterationsPerSecond_pos;
     COORD hud_aliveCells_pos;
-    
+    COORD hud_shortcutInfo_pos;
 };
 ```
 

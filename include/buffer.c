@@ -125,18 +125,15 @@ void kill_buffer_at_coord(char *buffer, struct settings gamesettings, int x_pos,
  * @param aliveCells 
  * @param currentGeneration 
  */
-void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneration, int runtime_start){
+void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneration, int generationsToCalc){
     set_cursor(gamesettings.hud_currentGeneration_pos.X, gamesettings.hud_currentGeneration_pos.Y);
-    printf("generation: %d", currentGeneration);
+    printf("generation: %d of %d", currentGeneration, generationsToCalc);
 
     set_cursor(gamesettings.hud_aliveCells_pos.X, gamesettings.hud_aliveCells_pos.Y);
     printf("cells alive: %d of %d  ", aliveCells, gamesettings.gridsize.X*gamesettings.gridsize.Y);
     
     set_cursor(gamesettings.hud_gridSize_pos.X, gamesettings.hud_gridSize_pos.Y);
     printf("grid size: %dx%d", gamesettings.gridsize.X, gamesettings.gridsize.Y);
-
-    set_cursor(gamesettings.hud_periodInSeconds_pos.X, gamesettings.hud_periodInSeconds_pos.Y);
-    printf("time: %ds of %ds", get_time_since_start_value(runtime_start), gamesettings.periodInSeconds);
 
     set_cursor(gamesettings.hud_iterationsPerSecond_pos.X, gamesettings.hud_iterationsPerSecond_pos.Y);
     printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);

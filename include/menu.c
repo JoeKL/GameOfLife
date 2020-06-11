@@ -98,7 +98,7 @@ void draw_menu_values(struct menu_button Menu_Button[5], int array_length, struc
                 break;
 
             case 2:
-                printf(" = %d", gamesettings.periodInSeconds);
+                printf(" = %d", gamesettings.generationsToCalc);
                 break;
 
             case 3:
@@ -141,7 +141,7 @@ int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5],
 
             case 2:
                 set_value_cursor(Menu_Button, cursor_pos);
-                scanf("%i", &gamesettings->periodInSeconds);
+                scanf("%i", &gamesettings->generationsToCalc);
                 fflush(stdin);
                 break;
 

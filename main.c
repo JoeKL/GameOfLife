@@ -35,10 +35,9 @@ int currentGeneration = 0;
 int iterationsSinceLastChange = 0;
 int runtime_start = 0;
 
-void run(int periodInSeconds, int ticksPerSecond);
+void run(int generationsToCalc, int ticksPerSecond);
 void tick(int *end_game, int *pause_game);
 
-void draw_hud();
 void settings_menu();
 void main_menu();
 void init_settings();
@@ -65,8 +64,8 @@ void init_settings(){
     gamesettings.hud_currentGeneration_pos.Y = 57;
     gamesettings.hud_aliveCells_pos.X = 50;
     gamesettings.hud_aliveCells_pos.Y = 57;
-    gamesettings.hud_periodInSeconds_pos.X = 100;
-    gamesettings.hud_periodInSeconds_pos.Y = 57;
+    gamesettings.hud_generationsToCalc_pos.X = 100;
+    gamesettings.hud_generationsToCalc_pos.Y = 57;
     gamesettings.hud_iterationsPerSecond_pos.X = 150;
     gamesettings.hud_iterationsPerSecond_pos.Y = 57;
     gamesettings.hud_gridSize_pos.X = 200;
@@ -109,7 +108,7 @@ void init_settings(){
     settingsMenu_Button[1].pos.X = 124;
     settingsMenu_Button[1].pos.Y = 22;
 
-    strcpy(settingsMenu_Button[2].label, "periodInSeconds");
+    strcpy(settingsMenu_Button[2].label, "generationsToCalc");
     settingsMenu_Button[2].pos.X = 124;
     settingsMenu_Button[2].pos.Y = 24;
 
@@ -132,16 +131,16 @@ void init_settings(){
 
     //setze base values
     gamesettings.iterationsPerSecond = 30;
-    gamesettings.periodInSeconds = 10;
+    gamesettings.generationsToCalc = 10;
 
     //setze grid size
     gamesettings.gridsize.X = 117;
     gamesettings.gridsize.Y = 57;
 }
 
-void run(int periodInSeconds, int ticksPerSecond){
+void run(int generationsToCalc, int ticksPerSecond){
 
-    runtime_start = time(0);
+    int calculated_ticks = 0;
 
     // Variable wird in der Funktion tick() auf 1 gesetzt um das aktuelle Spiel zu beenden
     int end_game = 0;
@@ -151,16 +150,19 @@ void run(int periodInSeconds, int ticksPerSecond){
     aliveCellsPrevGen = 0;
     currentGeneration = 0;
     iterationsSinceLastChange = 0;
-    
-    //Simulation läuft solange bis solange bis periodInSeconds erreicht wurde
-    while(get_time_since_start_value(runtime_start) < periodInSeconds) {
+
+    //Simulation läuft solange bis solange bis periodInTicks erreicht wurde
+    while(calculated_ticks <= generationsToCalc) {
 
         //Schlafe in jedem Tick für 1000ms/ticksPerSecond -> 1000/30 = 33.3ms
         Sleep((DWORD) 1000/ticksPerSecond);
         
         if(!pause_game){
             tick(&end_game, &pause_game);
+            calculated_ticks++;
         }
+        
+        draw_hud(gamesettings, aliveCells, currentGeneration, generationsToCalc);
 
         // +++++++ KeyStonks +++++++
         if (kbhit()){
@@ -187,8 +189,10 @@ void run(int periodInSeconds, int ticksPerSecond){
                 set_cursor(0, 58);
                 printf("generation %i has been saved as 'preset.txt'", currentGeneration);
 
+            } else if(ch == 13 && pause_game == 1){
+                tick(&end_game, &pause_game);
+                calculated_ticks++;
             }
-            
         }  
 
         // wenn in tick() end_game > 0 gesetzt wurde, dann breche aus der While-Schleife
@@ -205,11 +209,8 @@ void tick(int *end_game, int *pause_game){
     // kopiere das aktuelle grid
     copy_grid(gridcopy, grid, gamesettings.gridsize);
 
-    int x;
-    int y;
-
-    for(y = 0; y < gamesettings.gridsize.Y; y++){
-        for(x = 0; x < gamesettings.gridsize.X; x++){
+    for(int y = 0; y < gamesettings.gridsize.Y; y++){
+        for(int x = 0; x < gamesettings.gridsize.X; x++){
 
             // zähle lebende Zellen beim durchgehen
             aliveCells += grid[x][y].alive;
@@ -239,7 +240,6 @@ void tick(int *end_game, int *pause_game){
         }
     }
 
-    draw_hud(gamesettings, aliveCells, currentGeneration, runtime_start);
     print_buffer(buffer);
 
     // ++++++++ EndCondition ++++++++
@@ -281,7 +281,7 @@ void start_game(int is_random){
 
     calc_all_neighbors(grid, gamesettings.gridsize);
 
-    run(gamesettings.periodInSeconds, gamesettings.iterationsPerSecond);
+    run(gamesettings.generationsToCalc, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
