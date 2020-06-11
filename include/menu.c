@@ -90,27 +90,27 @@ void draw_menu_values(struct menu_button Menu_Button[5], int array_length, struc
         switch (i)
         {
             case 0:
-                printf(" = %d", gamesettings.gridsize.X);
+                printf(" = %d            ", gamesettings.gridsize.X);
                 break;
             
             case 1:
-                printf(" = %d", gamesettings.gridsize.Y);
+                printf(" = %d            ", gamesettings.gridsize.Y);
                 break;
 
             case 2:
-                printf(" = %d", gamesettings.generationsToCalc);
+                printf(" = %d            ", gamesettings.generationsToCalc);
                 break;
 
             case 3:
-                printf(" = %d", gamesettings.iterationsPerSecond);
+                printf(" = %d            ", gamesettings.iterationsPerSecond);
                 break;            
 
             case 4:
-                printf(" = '%c'", gamesettings.symbolAlive);
+                printf(" = '%c'          ", gamesettings.symbolAlive);
                 break;
 
             case 5:
-                printf(" = '%c'", gamesettings.symbolDead);
+                printf(" = '%c'          ", gamesettings.symbolDead);
                 break;
         }
     }
@@ -127,40 +127,92 @@ int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5],
 
         switch (cursor_pos)
         {
-            case 0:
+            case 0:    
                 set_value_cursor(Menu_Button, cursor_pos);
                 scanf("%hu", &gamesettings->gridsize.X);
                 fflush(stdin);
+
+                if(gamesettings->gridsize.X < 5){
+                    gamesettings->gridsize.X = 5;
+                }
+                
+                if(gamesettings->gridsize.X > 117){
+                    gamesettings->gridsize.X = 117;
+                }
+
                 break;
             
             case 1:
                 set_value_cursor(Menu_Button, cursor_pos);
                 scanf("%hu", &gamesettings->gridsize.Y);
                 fflush(stdin);
+
+                
+                if(gamesettings->gridsize.Y < 5){
+                    gamesettings->gridsize.Y = 5;
+                }
+                
+                if(gamesettings->gridsize.Y > 57){
+                    gamesettings->gridsize.Y = 57;
+                }
+
                 break;
 
             case 2:
                 set_value_cursor(Menu_Button, cursor_pos);
                 scanf("%i", &gamesettings->generationsToCalc);
                 fflush(stdin);
+
+                if(gamesettings->generationsToCalc < 10){
+                    gamesettings->generationsToCalc = 10;
+                }
+                
+                if(gamesettings->generationsToCalc > 2147483647){
+                    gamesettings->generationsToCalc = 2147483647;
+                }
+
+
                 break;
 
             case 3:
                 set_value_cursor(Menu_Button, cursor_pos);
                 scanf("%i", &gamesettings->iterationsPerSecond);
                 fflush(stdin);
+
+                if(gamesettings->generationsToCalc < 1){
+                    gamesettings->generationsToCalc = 1;
+                }
+                
+                if(gamesettings->generationsToCalc > 2147483647){
+                    gamesettings->generationsToCalc = 2147483647;
+                }
+
                 break;            
 
             case 4:
                 set_value_cursor(Menu_Button, cursor_pos);
-                scanf("%c", &gamesettings->symbolAlive);
+                if(!scanf("%c", &gamesettings->symbolAlive)){
+                    gamesettings->symbolAlive = '#';
+                }
+
+                if(gamesettings->symbolAlive == '\n'){
+                    gamesettings->symbolAlive = '#';
+                }
+
                 fflush(stdin);
                 break;
 
             case 5:
                 set_value_cursor(Menu_Button, cursor_pos);
-                scanf("%c", &gamesettings->symbolDead);
+                if(!scanf("%c", &gamesettings->symbolDead)){
+                    gamesettings->symbolDead = '-';
+                }
                 fflush(stdin);
+
+                if(gamesettings->symbolDead == '\n'){
+                    gamesettings->symbolDead = '-';
+                }
+
                 break;
         }
 
