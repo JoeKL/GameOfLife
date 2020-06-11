@@ -29,14 +29,14 @@ struct menu_button mainMenu_Button[4];
 struct menu_button startMenu_Button[2];
 struct menu_button settingsMenu_Button[6];
 
-int aliveCells = 0;
+int aliveCells = 0; 
 int aliveCellsPrevGen = 0;
 int currentGeneration = 0;
 int iterationsSinceLastChange = 0;
 int runtime_start = 0;
 
 void run(int periodInSeconds, int ticksPerSecond);
-void tick(int *end_game);
+void tick(int *end_game, int *pause_game);
 
 void draw_hud();
 void settings_menu();
@@ -145,14 +145,51 @@ void run(int periodInSeconds, int ticksPerSecond){
 
     // Variable wird in der Funktion tick() auf 1 gesetzt um das aktuelle Spiel zu beenden
     int end_game = 0;
+    int pause_game = 0;
 
+    aliveCells = 0; 
+    aliveCellsPrevGen = 0;
+    currentGeneration = 0;
+    iterationsSinceLastChange = 0;
+    
     //Simulation läuft solange bis solange bis periodInSeconds erreicht wurde
     while(get_time_since_start_value(runtime_start) < periodInSeconds) {
 
         //Schlafe in jedem Tick für 1000ms/ticksPerSecond -> 1000/30 = 33.3ms
         Sleep((DWORD) 1000/ticksPerSecond);
         
-        tick(&end_game);
+        if(!pause_game){
+            tick(&end_game, &pause_game);
+        }
+
+        // +++++++ KeyStonks +++++++
+        if (kbhit()){
+            int ch = _getch();
+            
+            if(ch == 27){
+
+                //wenn *ESC* dann end game
+                end_game = 1;
+
+            } else if(ch == 32){
+
+                //wenn *space* dann pause game
+                if(pause_game == 0){
+                    pause_game = 1;
+                } else {
+                    pause_game = 0;
+                }
+                
+            } else if(ch == 115){
+
+                //wenn *s* dann save gamestate in preset
+                save_preset_from_grid(grid, gamesettings.gridsize);
+                set_cursor(0, 58);
+                printf("generation %i has been saved as 'preset.txt'", currentGeneration);
+
+            }
+            
+        }  
 
         // wenn in tick() end_game > 0 gesetzt wurde, dann breche aus der While-Schleife
         if(end_game) {
@@ -161,7 +198,7 @@ void run(int periodInSeconds, int ticksPerSecond){
     }
 }
 
-void tick(int *end_game){
+void tick(int *end_game, int *pause_game){
 
     aliveCells = 0;
 
@@ -205,33 +242,6 @@ void tick(int *end_game){
     draw_hud(gamesettings, aliveCells, currentGeneration, runtime_start);
     print_buffer(buffer);
 
-    // +++++++ KeyStonks +++++++
-
-    if (kbhit()){
-        int ch = _getch();
-        
-        if(ch == 27){
-
-            //wenn *ESC* dann end game
-            *end_game = 1;
-
-        } else if(ch == 32){
-
-            //wenn *space* dann pause game
-            
-        } else if(ch == 115){
-
-            //wenn *s* dann save gamestate in preset
-            save_preset_from_grid(grid, gamesettings.gridsize);
-            set_cursor(0, 58);
-            printf("generation %i has been saved as 'preset.txt'", currentGeneration);
-
-        }
-        
-    }
-
-    // ------- KeyStonks -------
-
     // ++++++++ EndCondition ++++++++
     currentGeneration++;
 
@@ -252,8 +262,6 @@ void tick(int *end_game){
 
 
 void start_game(int is_random){
-
-    currentGeneration = 0;
 
     alloc_grid(&grid, gamesettings.gridsize);
     alloc_grid(&gridcopy, gamesettings.gridsize);
