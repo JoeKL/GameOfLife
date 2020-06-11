@@ -139,5 +139,5 @@ void draw_hud(struct settings gamesettings, int aliveCells, int currentGeneratio
     printf("iterationsPerSecond: %d", gamesettings.iterationsPerSecond);
 
     set_cursor(gamesettings.hud_shortcutInfo_pos.X, gamesettings.hud_shortcutInfo_pos.Y);
-    printf("|\t'ESC' to end game\t|\t'SPACE' to pause game\t|\t'S' to save currrent state as preset\t|");
+    printf("|\t'ESC' to end game\t|\t'SPACE' to switch between auto- and step-mode\t|\t'S' to save currrent state as preset\t|\t'ENTER' to step in step-mode\t|");
 }

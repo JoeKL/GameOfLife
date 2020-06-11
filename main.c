@@ -70,7 +70,7 @@ void init_settings(){
     gamesettings.hud_iterationsPerSecond_pos.Y = 57;
     gamesettings.hud_gridSize_pos.X = 200;
     gamesettings.hud_gridSize_pos.Y = 57;
-    gamesettings.hud_shortcutInfo_pos.X = 0;
+    gamesettings.hud_shortcutInfo_pos.X = 25;
     gamesettings.hud_shortcutInfo_pos.Y = 59;
 
     //setze Main Menu Buttons
@@ -131,7 +131,7 @@ void init_settings(){
 
     //setze base values
     gamesettings.iterationsPerSecond = 30;
-    gamesettings.generationsToCalc = 10;
+    gamesettings.generationsToCalc = 100;
 
     //setze grid size
     gamesettings.gridsize.X = 117;
