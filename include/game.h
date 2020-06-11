@@ -46,8 +46,14 @@ struct settings{
 uint32_t generate_random_int_msws();
 
 void alloc_grid(struct cell *** grid_ptr, COORD gridsize);
+
 void dealloc_grid(struct cell *** grid_ptr, const int x_size);
-void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD gridsize);
+
+void copy_grid(
+            struct cell ** grid_ptr_dest, 
+            struct cell ** grid_ptr_src, 
+            COORD gridsize
+);
 
 void load_preset_to_grid(struct cell ** grid_ptr, COORD gridsize);
 void save_preset_from_grid(struct cell ** grid_ptr, COORD gridsize);

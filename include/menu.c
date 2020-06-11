@@ -256,7 +256,7 @@ void erase_cursor(COORD cords){
  * @brief sets the console to fullscreen (same as alt+enter)
  * 
  */
-void console_fullscreen(){
+void set_console_fullscreen(){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     // Consolewindow -> Alt+Enter
     SetConsoleDisplayMode(consoleHandle,CONSOLE_FULLSCREEN_MODE,0);

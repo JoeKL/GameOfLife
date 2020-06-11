@@ -46,12 +46,10 @@ int main(){
 
     SetConsoleTitle((LPCTSTR) "Game of Life");
     
-    console_fullscreen();
+    set_console_fullscreen();
     init_settings();
-
     main_menu();
 
-    system("pause");
     return 0;
 }
 
@@ -260,13 +258,18 @@ void tick(int *end_game, int *pause_game){
     // -------- EndCondition --------
 }
 
-
 void start_game(int is_random){
 
     alloc_grid(&grid, gamesettings.gridsize);
     alloc_grid(&gridcopy, gamesettings.gridsize);
     alloc_buffer(&buffer, gamesettings.gridsize);
-    initialize_buffer(buffer, gamesettings.gridsize, gamesettings.symbolAlive, gamesettings.symbolDead);
+
+    initialize_buffer(
+                buffer, 
+                gamesettings.gridsize, 
+                gamesettings.symbolAlive, 
+                gamesettings.symbolDead
+    );
 
     initialize_empty_grid(grid, gamesettings.gridsize);
 
@@ -280,7 +283,7 @@ void start_game(int is_random){
     define_neighborhood(gridcopy, gamesettings.gridsize);
 
     calc_all_neighbors(grid, gamesettings.gridsize);
-
+    
     run(gamesettings.generationsToCalc, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
@@ -294,10 +297,22 @@ void settings_menu(){
     int refresh_menu = 1;
     while (refresh_menu == 1)
     {
-        draw_menu(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]));
-        draw_menu_values(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), gamesettings);
+        draw_menu(
+                settingsMenu_Button, 
+                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0])
+        );
+
+        draw_menu_values(
+                settingsMenu_Button, 
+                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), 
+                gamesettings
+        );
         
-        set_menucursor(settingsMenu_Button, sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), settings_menu_cursor_position);
+        set_menucursor(
+                settingsMenu_Button, 
+                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), 
+                settings_menu_cursor_position
+        );
 
         int ch = _getch();
         if (ch == 0 || ch == 224)
@@ -379,9 +394,16 @@ void start_menu(){
     int refresh_menu = 1;
     while (refresh_menu == 1)
     {
-        draw_menu(startMenu_Button, sizeof(startMenu_Button)/sizeof(startMenu_Button[0]));
+        draw_menu(
+                startMenu_Button, 
+                sizeof(startMenu_Button)/sizeof(startMenu_Button[0])
+        );
 
-        set_menucursor(startMenu_Button, sizeof(startMenu_Button)/sizeof(startMenu_Button[0]), start_menu_cursor_position);
+        set_menucursor(
+                startMenu_Button, 
+                sizeof(startMenu_Button)/sizeof(startMenu_Button[0]), 
+                start_menu_cursor_position
+        );
 
         int ch = _getch();
         if (ch == 0 || ch == 224)
@@ -397,15 +419,6 @@ void start_menu(){
                 case 80:
                         start_menu_cursor_position++;
                     break;
-
-                //LEFT
-                case 75:
-                    break;
-                                    
-                //RIGHT
-                case 77:
-                    break;
-
 
             }
         } else {
@@ -462,9 +475,17 @@ void main_menu(){
     while (1)
     {
         print_logo(86, 10);
-        draw_menu(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]));
 
-        set_menucursor(mainMenu_Button, sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), main_menu_cursor_position);
+        draw_menu(
+                mainMenu_Button, 
+                sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0])
+        );
+
+        set_menucursor(
+                mainMenu_Button, 
+                sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), 
+                main_menu_cursor_position
+        );
 
         int ch = _getch();
         if (ch == 0 || ch == 224)
@@ -480,15 +501,6 @@ void main_menu(){
                 case 80:
                         main_menu_cursor_position++;
                     break;
-
-                //LEFT
-                case 75:
-                    break;
-                                    
-                //RIGHT
-                case 77:
-                    break;
-
 
             }
         } else {

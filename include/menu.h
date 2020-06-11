@@ -28,9 +28,19 @@ void set_cursor(int x, int y);
 void set_fontsize(int size);
 
 void draw_menu(struct menu_button Menu_Button[3], int array_length);
-void draw_menu_values(struct menu_button Menu_Button[3], int array_length, struct settings gamesettings);
 
-int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos);
+void draw_menu_values(
+                struct menu_button Menu_Button[3], 
+                int array_length, 
+                struct settings gamesettings
+);
+
+int edit_value(
+        struct settings *gamesettings, 
+        struct menu_button Menu_Button[5], 
+        int cursor_pos
+);
+
 void set_value_cursor(struct menu_button Menu_Button[5], int cursor_pos);
 
 void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position);
@@ -40,6 +50,6 @@ void draw_cursor(COORD cords);
 void erase_cursor(COORD cords);
 
 COORD get_console_window_size(HANDLE hConsoleOutput);
-void console_fullscreen();
+void set_console_fullscreen();
 
 #endif
