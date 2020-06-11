@@ -45,7 +45,7 @@ void init_settings();
 
 int main(){
 
-    // SetConsoleTitle((LPCTSTR) "Game of Life");
+    SetConsoleTitle((LPCTSTR) "Game of Life");
     
     console_fullscreen();
     init_settings();
@@ -131,7 +131,7 @@ void init_settings(){
     gamesettings.symbolDead = '-';
 
     //setze base values
-    gamesettings.iterationsPerSecond = 2000;
+    gamesettings.iterationsPerSecond = 30;
     gamesettings.periodInSeconds = 10;
 
     //setze grid size
@@ -146,20 +146,15 @@ void run(int periodInSeconds, int ticksPerSecond){
     // Variable wird in der Funktion tick() auf 1 gesetzt um das aktuelle Spiel zu beenden
     int end_game = 0;
 
+    //Simulation läuft solange bis solange bis periodInSeconds erreicht wurde
     while(get_time_since_start_value(runtime_start) < periodInSeconds) {
-        double cpu_time_used;
-        clock_t start, end;
 
-        start = clock();
-        do {
-            end = clock();
-            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-        } while(cpu_time_used < (double) 1/ticksPerSecond);
+        //Schlafe in jedem Tick für 1000ms/ticksPerSecond -> 1000/30 = 33.3ms
+        Sleep((DWORD) 1000/ticksPerSecond);
         
         tick(&end_game);
 
-        // wenn end_game == 1 dann breche aus der While-Schleife
+        // wenn in tick() end_game > 0 gesetzt wurde, dann breche aus der While-Schleife
         if(end_game) {
             break;
         }
