@@ -19,6 +19,7 @@
 #include "include/buffer.h"
 
 struct settings gamesettings;
+struct rule gamerules;
 
 struct cell **grid;
 struct cell **gridcopy;
@@ -27,6 +28,7 @@ char *buffer;
 struct menu_button mainMenu_Button[4];
 struct menu_button startMenu_Button[2];
 struct menu_button settingsMenu_Button[6];
+struct menu_button ruleMenu_Button[3];
 
 int aliveCells = 0; 
 int aliveCellsPrevGen = 0;
@@ -125,6 +127,18 @@ void init_settings(){
     settingsMenu_Button[5].pos.X = 124;
     settingsMenu_Button[5].pos.Y = 30;
 
+    //setze Rule Menu Buttons
+    strcpy(ruleMenu_Button[0].label, "rebornRule");
+    ruleMenu_Button[0].pos.X = 124;
+    ruleMenu_Button[0].pos.Y = 20;
+
+    strcpy(ruleMenu_Button[1].label, "lonelinessRule");
+    ruleMenu_Button[1].pos.X = 124;
+    ruleMenu_Button[1].pos.Y = 22;
+
+    strcpy(ruleMenu_Button[2].label, "overpopulationRule");
+    ruleMenu_Button[2].pos.X = 124;
+    ruleMenu_Button[2].pos.Y = 24;
 
     //setze Symbole
     gamesettings.symbolAlive = '#';
@@ -137,6 +151,11 @@ void init_settings(){
     //setze grid size
     gamesettings.gridsize.X = 117;
     gamesettings.gridsize.Y = 57;
+
+    //setze gamerules
+    gamerules.rebornRule = 3;
+    gamerules.lonelinessRule = 2;
+    gamerules.overpopulationRule = 3;
 }
 
 /**
@@ -232,19 +251,19 @@ void tick(int *end_game, int *pause_game){
             if (gridcopy[x][y].livingNeighbors){
                 
                 //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
-                if(gridcopy[x][y].livingNeighbors == 3 && gridcopy[x][y].alive == 0){
+                if(gridcopy[x][y].livingNeighbors == gamerules.rebornRule && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
                     add_neighborhood(grid[x][y]); 
                     revive_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-                if (gridcopy[x][y].livingNeighbors < 2 && gridcopy[x][y].alive == 1) {
+                if (gridcopy[x][y].livingNeighbors < gamerules.lonelinessRule && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
-                if (gridcopy[x][y].livingNeighbors > 3 && gridcopy[x][y].alive == 1) {
+                if (gridcopy[x][y].livingNeighbors > gamerules.overpopulationRule && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
@@ -326,7 +345,7 @@ void settings_menu(){
                 sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0])
         );
 
-        draw_menu_values(
+        draw_settings_menu_values(
                 settingsMenu_Button, 
                 sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), 
                 gamesettings
@@ -365,28 +384,28 @@ void settings_menu(){
                     {
                         case 0:
                             //%hu == short unsigned
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
                         
                         case 1:
                             //%hu == short unsigned
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);    
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);    
                             break;
                             
                         case 2:
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
 
                         case 3:
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
 
                         case 4:
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
 
                         case 5:
-                            edit_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
                     }
 
@@ -496,6 +515,88 @@ void start_menu(){
 
 }
 
+void rule_menu(){
+    int rule_menu_cursor_position = 0;
+
+    int refresh_menu = 1;
+    while (refresh_menu == 1)
+    {
+        draw_menu(
+                ruleMenu_Button, 
+                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0])
+        );
+
+        draw_rule_menu_values(
+                ruleMenu_Button, 
+                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]), 
+                gamerules
+        );
+        
+        set_menucursor(
+                ruleMenu_Button, 
+                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]), 
+                rule_menu_cursor_position
+        );
+
+        int ch = _getch();
+        if (ch == 0 || ch == 224)
+        {
+            switch (_getch())
+            {
+                //UP
+                case 72:
+                        set_cursor(0,0);
+                        rule_menu_cursor_position--;
+                    break;
+
+                //DOWN
+                case 80:
+                        set_cursor(0,0);
+                        rule_menu_cursor_position++;
+                    break;
+
+            }
+        } else {
+            switch (ch)
+            {
+                //ENTER
+                case 13:
+                    switch (rule_menu_cursor_position)
+                    {
+                        case 0:
+                            edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);
+                            break;
+                        
+                        case 1:
+                            edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);    
+                            break;
+                            
+                        case 2:
+                            edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);
+                            break;
+                    }
+
+                    break;
+                //ESC
+                case 27:
+                    refresh_menu = 0;
+                    system("cls");
+                    break;
+            }
+        }
+        
+        if(rule_menu_cursor_position < 0){
+            rule_menu_cursor_position = 0;
+        }
+
+        if(rule_menu_cursor_position > sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]) - 1){
+            rule_menu_cursor_position = sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]) - 1;
+        }
+        
+    }
+
+}
+
 /**
  * @brief 
  * 
@@ -552,6 +653,7 @@ void main_menu(){
                             break;
                             
                         case 2:
+                            rule_menu();
                             break;
                             
                         case 3:

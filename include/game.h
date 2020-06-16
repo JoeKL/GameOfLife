@@ -43,6 +43,13 @@ struct settings{
     COORD hud_shortcutInfo_pos;
 };
 
+struct rule{
+    int rebornRule;
+    int lonelinessRule;
+    int overpopulationRule;
+};
+
+
 uint32_t generate_random_int_msws();
 
 void alloc_grid(struct cell *** grid_ptr, COORD gridsize);

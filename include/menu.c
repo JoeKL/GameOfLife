@@ -80,7 +80,7 @@ void draw_menu(struct menu_button Menu_Button[5], int array_length){
  * @param Menu_Button 
  * @param array_length 
  */
-void draw_menu_values(struct menu_button Menu_Button[5], int array_length, struct settings gamesettings){
+void draw_settings_menu_values(struct menu_button Menu_Button[5], int array_length, struct settings gamesettings){
  
     for (int i = 0; i < array_length; i++){
 
@@ -120,15 +120,47 @@ void draw_menu_values(struct menu_button Menu_Button[5], int array_length, struc
 /**
  * @brief 
  * 
+ * @param Menu_Button 
+ * @param array_length 
+ */
+void draw_rule_menu_values(struct menu_button Menu_Button[5], int array_length, struct rule gamerules){
+ 
+    for (int i = 0; i < array_length; i++){
+
+        set_cursor(Menu_Button[i].pos.X + sizeof(Menu_Button[i].label), Menu_Button[i].pos.Y);
+
+
+        switch (i)
+        {
+            case 0:
+                printf(" = %d            ", gamerules.rebornRule);
+                break;
+            
+            case 1:
+                printf(" = %d            ", gamerules.lonelinessRule);
+                break;
+
+            case 2:
+                printf(" = %d            ", gamerules.overpopulationRule);
+                break;
+        }
+    }
+
+}
+
+/**
+ * @brief 
+ * 
  * @param cursor_pos 
  * @return int 
  */
-int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos){
+int edit_setting_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos){
 
         switch (cursor_pos)
         {
             case 0:    
                 set_value_cursor(Menu_Button, cursor_pos);
+                //%hu == short unsigned
                 scanf("%hu", &gamesettings->gridsize.X);
                 fflush(stdin);
 
@@ -144,6 +176,7 @@ int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5],
             
             case 1:
                 set_value_cursor(Menu_Button, cursor_pos);
+                //%hu == short unsigned
                 scanf("%hu", &gamesettings->gridsize.Y);
                 fflush(stdin);
 
@@ -213,6 +246,35 @@ int edit_value(struct settings *gamesettings, struct menu_button Menu_Button[5],
                     gamesettings->symbolDead = '-';
                 }
 
+                break;
+        }
+
+
+    return 0;
+}
+
+int edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], int cursor_pos){
+
+        switch (cursor_pos)
+        {
+            case 0:    
+                set_value_cursor(Menu_Button, cursor_pos);
+                //%hu == short unsigned
+                scanf("%hu", &gamerules->rebornRule);
+                fflush(stdin);
+                break;
+            
+            case 1:
+                set_value_cursor(Menu_Button, cursor_pos);
+                //%hu == short unsigned
+                scanf("%hu", &gamerules->lonelinessRule);
+                fflush(stdin);
+                break;
+
+            case 2:
+                set_value_cursor(Menu_Button, cursor_pos);
+                scanf("%i", &gamerules->overpopulationRule);
+                fflush(stdin);
                 break;
         }
 

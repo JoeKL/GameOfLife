@@ -29,14 +29,26 @@ void set_fontsize(int size);
 
 void draw_menu(struct menu_button Menu_Button[3], int array_length);
 
-void draw_menu_values(
+void draw_settings_menu_values(
                 struct menu_button Menu_Button[3], 
                 int array_length, 
                 struct settings gamesettings
 );
 
-int edit_value(
+void draw_rule_menu_values(
+                struct menu_button Menu_Button[3], 
+                int array_length, 
+                struct rule gamerules
+);
+
+int edit_setting_value(
         struct settings *gamesettings, 
+        struct menu_button Menu_Button[5], 
+        int cursor_pos
+);
+
+int edit_rule_value(
+        struct rule *gamerules, 
         struct menu_button Menu_Button[5], 
         int cursor_pos
 );
