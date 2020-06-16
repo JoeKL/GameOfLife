@@ -13,7 +13,6 @@
 #include <time.h>
 #include <windows.h>
 #include <conio.h>
-#include <pthread.h> 
 
 #include "include/menu.h"
 #include "include/game.h"
@@ -53,6 +52,10 @@ int main(){
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ */
 void init_settings(){
     //setze den rand() seed auf Sekunden seit Epoche
     srand(time(NULL));
@@ -136,6 +139,12 @@ void init_settings(){
     gamesettings.gridsize.Y = 57;
 }
 
+/**
+ * @brief 
+ * 
+ * @param generationsToCalc 
+ * @param ticksPerSecond 
+ */
 void run(int generationsToCalc, int ticksPerSecond){
 
     int calculated_ticks = 0;
@@ -200,6 +209,12 @@ void run(int generationsToCalc, int ticksPerSecond){
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param end_game 
+ * @param pause_game 
+ */
 void tick(int *end_game, int *pause_game){
 
     aliveCells = 0;
@@ -223,13 +238,13 @@ void tick(int *end_game, int *pause_game){
                     revive_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
-                if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors < 2) {
+                if (gridcopy[x][y].livingNeighbors < 2 && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
-                if (gridcopy[x][y].alive == 1 && gridcopy[x][y].livingNeighbors > 3) {
+                if (gridcopy[x][y].livingNeighbors > 3 && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
                     sub_neighborhood(grid[x][y]); 
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
@@ -258,6 +273,11 @@ void tick(int *end_game, int *pause_game){
     // -------- EndCondition --------
 }
 
+/**
+ * @brief 
+ * 
+ * @param is_random 
+ */
 void start_game(int is_random){
 
     alloc_grid(&grid, gamesettings.gridsize);
@@ -291,6 +311,10 @@ void start_game(int is_random){
     dealloc_buffer(&buffer);
 }
 
+/**
+ * @brief 
+ * 
+ */
 void settings_menu(){
     int settings_menu_cursor_position = 0;
 
@@ -387,6 +411,10 @@ void settings_menu(){
 
 }
 
+/**
+ * @brief 
+ * 
+ */
 void start_menu(){
 
     int start_menu_cursor_position = 0;
@@ -468,6 +496,10 @@ void start_menu(){
 
 }
 
+/**
+ * @brief 
+ * 
+ */
 void main_menu(){
 
     int main_menu_cursor_position = 0;

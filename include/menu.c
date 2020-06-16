@@ -283,6 +283,12 @@ void set_menucursor(struct menu_button Menu_Button[3], int array_length, int pos
     }
 }
 
+/**
+ * @brief gibt das Spiel-Logo an Position x,y aus
+ * 
+ * @param x 
+ * @param y 
+ */
 void print_logo(int x, int y){
 
     set_cursor(x, y);

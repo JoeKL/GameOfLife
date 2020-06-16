@@ -13,7 +13,11 @@ uint64_t x_msws = 0, w_msws = 0;
 // Must be odd (least significant bit is "1"), and upper 64-bits non-zero
 uint64_t seed_msws = 0xb5ad4eceda1ce2a9; // qualifying seed
 
-// return 32-bit number
+/**
+ * @brief 
+ * 
+ * @return uint32_t 
+ */
 uint32_t generate_random_int_msws() {
     // https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/
     x_msws *= x_msws; // square the number
