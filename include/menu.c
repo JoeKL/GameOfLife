@@ -262,6 +262,16 @@ int edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], i
                 //%hu == short unsigned
                 scanf("%hu", &gamerules->rebornRule);
                 fflush(stdin);
+
+                
+                if(gamerules->rebornRule < 1){
+                    gamerules->rebornRule = 1;
+                }
+                
+                if(gamerules->rebornRule > 8){
+                    gamerules->rebornRule = 8;
+                }
+
                 break;
             
             case 1:
@@ -269,12 +279,31 @@ int edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], i
                 //%hu == short unsigned
                 scanf("%hu", &gamerules->lonelinessRule);
                 fflush(stdin);
+
+                if(gamerules->lonelinessRule < 1){
+                    gamerules->lonelinessRule = 1;
+                }
+                
+                if(gamerules->lonelinessRule > 8){
+                    gamerules->lonelinessRule = 8;
+                }
+
+
                 break;
 
             case 2:
                 set_value_cursor(Menu_Button, cursor_pos);
                 scanf("%i", &gamerules->overpopulationRule);
                 fflush(stdin);
+
+                if(gamerules->overpopulationRule < 1){
+                    gamerules->overpopulationRule = 1;
+                }
+                
+                if(gamerules->overpopulationRule > 8){
+                    gamerules->overpopulationRule = 8;
+                }
+
                 break;
         }
 
