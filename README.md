@@ -8,3 +8,8 @@
 ## Compiler
 
 [Link zum Compiler](https://sourceforge.net/projects/mingw-w64/files/Toolchains&#32;targetting&#32;Win32/Personal&#32;Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+
+## Bekannte Fehler
+
+Compilierte Datei stürtzt nach dem Beenden eines Spiels ab. Der Fehler ist für uns weder in Codeblocks noch in VSCode nachzuvollziehen. 
+Wir bitten um Rücksprache.

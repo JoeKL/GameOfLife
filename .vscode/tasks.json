@@ -10,7 +10,8 @@
 				"${file}",
 				"${workspaceFolder}/include/*",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe"
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"-static-libgcc"
 			],
 			"options": {
 				"cwd": "C:\\mingw-w64\\bin"
