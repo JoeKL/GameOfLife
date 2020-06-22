@@ -13,11 +13,6 @@ uint64_t x_msws = 0, w_msws = 0;
 // Must be odd (least significant bit is "1"), and upper 64-bits non-zero
 uint64_t seed_msws = 0xb5ad4eceda1ce2a9; // qualifying seed
 
-/**
- * @brief 
- * 
- * @return uint32_t 
- */
 uint32_t generate_random_int_msws() {
     // https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/
     x_msws *= x_msws; // square the number
@@ -26,13 +21,7 @@ uint32_t generate_random_int_msws() {
     return x_msws = (x_msws>>32) | (x_msws<<32); // return the middle 32-bits
 }
 
-/**
- * @brief alloc_grid reserviert den Speicher des Feldes
- * struct cell ***grid_ptr -> deklariere "grid" als pointer to pointer to pointer to struct cell 
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void alloc_grid(struct cell ***grid_ptr, COORD gridsize){
 
     *grid_ptr = (struct cell **)malloc(gridsize.X * sizeof(struct cell *));
@@ -42,13 +31,7 @@ void alloc_grid(struct cell ***grid_ptr, COORD gridsize){
     }
 }
 
-/**
- * @brief dealloc_grid gibt den Speicher des Feldes wieder frei
- * struct cell ***grid_ptr -> deklariere "grid" als pointer to pointer to pointer to struct cell 
- * 
- * @param grid_ptr 
- * @param x_size 
- */
+
 void dealloc_grid(struct cell *** grid_ptr, const int x_size){
     for (int i = 0; i < x_size; i++)
     {
@@ -57,12 +40,7 @@ void dealloc_grid(struct cell *** grid_ptr, const int x_size){
     free(*grid_ptr);
 }
 
-/**
- * @brief load_preset_to_grid speichert den Stand des Feldes als Preset in eine Textdatei.
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void save_preset_from_grid(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "w");
@@ -84,12 +62,7 @@ void save_preset_from_grid(struct cell ** grid_ptr, COORD gridsize){
     }
 }
 
-/**
- * @brief load_preset_to_grid laed ein Preset aus einer Textdatei.
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void load_preset_to_grid(struct cell ** grid_ptr, COORD gridsize){
     FILE *fp;
     fp = fopen("preset.txt", "r");
@@ -108,13 +81,7 @@ void load_preset_to_grid(struct cell ** grid_ptr, COORD gridsize){
 	fclose(fp);
 }
 
-/**
- * @brief copy_grid kopiert alle Werte eines Feldes in ein neues Feld
- * 
- * @param grid_ptr_dest 
- * @param grid_ptr_src 
- * @param gridsize 
- */
+
 void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD gridsize){
     for(int j=0; j < gridsize.X; j++) {
         memcpy(grid_ptr_dest[j], grid_ptr_src[j], gridsize.Y * sizeof(struct cell));
@@ -122,12 +89,7 @@ void copy_grid(struct cell ** grid_ptr_dest, struct cell ** grid_ptr_src, COORD 
 
 }
 
-/**
- * @brief define_neighborhood definiert alle anliegenden Nachbarzellen für jede Zelle eines Feldes
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void define_neighborhood(struct cell ** grid_ptr, COORD gridsize){
 
     /*
@@ -207,12 +169,7 @@ void define_neighborhood(struct cell ** grid_ptr, COORD gridsize){
     }
 }
 
-/**
- * @brief initialize_empty_grid initialisiert ein leeres grid
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void initialize_empty_grid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
     for(y = 0; y < gridsize.Y; y++){
@@ -223,12 +180,7 @@ void initialize_empty_grid(struct cell **grid_ptr, COORD gridsize){
     }
 }
 
-/**
- * @brief calc_all_neighbors initialisiert die livingNeighbors für jede Zelle.
- * 
- * @param grid_ptr 
- * @param gridsize 
- */
+
 void calc_all_neighbors(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
@@ -239,14 +191,7 @@ void calc_all_neighbors(struct cell **grid_ptr, COORD gridsize){
     }
 }
 
-/**
- * @brief 
- * generate_random_grid initialisiert das übergebene Feld mit dem Modulo 2 (%2)
- * aus einer zufälligen Zahl für jede Zelle eines Feldes
- * 
- * @param cell **grid_ptr 
- * @param gridsize 
- */
+
 void generate_random_grid(struct cell **grid_ptr, COORD gridsize){
     int x, y;
 
@@ -258,15 +203,6 @@ void generate_random_grid(struct cell **grid_ptr, COORD gridsize){
 }
 
 
-/**
- * @brief 
- * count_living_neighbors zählt die lebenden umliegenden Nachbarn.
- * diese Funktion ist möglichst effizient geschrieben, da sie beim initialisieren eines 1000x1000 Feldes
- * 1.000.000x aufgerufen wird.
- * 
- * @param cell grid 
- * @return int 
- */
 int count_living_neighbors(struct cell grid){
     return  grid.neighborCell[0] -> alive 
         +   grid.neighborCell[1] -> alive 
@@ -279,14 +215,7 @@ int count_living_neighbors(struct cell grid){
 }
 
 
-/**
- * @brief add_neighborhood informiert jede anliegende Nachbarzelle über den aktuellen Stand der Zelle
- * das passiert durch das Hochzählen von livingNeighbors in jeder anliegenden Zelle
- * diese Funktion ist möglichst effizient geschrieben,
- * da sie bei einem 1000x1000 Feld bis zu 1.000.000x pro Tick aufgrufen werden kann.
- * 
- * @param cell grid 
- */
+
 void add_neighborhood(struct cell grid){
     grid.neighborCell[0] -> livingNeighbors++;
     grid.neighborCell[1] -> livingNeighbors++;
@@ -298,14 +227,7 @@ void add_neighborhood(struct cell grid){
     grid.neighborCell[7] -> livingNeighbors++;
 }
 
-/**
- * @brief sub_neighborhood informiert jede anliegende Nachbarzelle über den aktuellen Stand der Zelle
- * das passiert durch das Runterzählen von livingNeighbors in jeder anliegenden Zelle
- * diese Funktion ist möglichst effizient geschrieben, 
- * da sie bei einem 1000x1000 Feld bis zu 1.000.000x pro Tick aufgrufen werden kann.
- * 
- * @param struct cell grid 
- */
+
 void sub_neighborhood(struct cell grid){
     grid.neighborCell[0] -> livingNeighbors--;
     grid.neighborCell[1] -> livingNeighbors--;

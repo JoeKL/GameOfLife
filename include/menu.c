@@ -10,12 +10,7 @@
 
 #include "menu.h"
 
-/**
- * @brief Set the cursor object
- * 
- * @param x 
- * @param y 
- */
+
 void set_cursor(int x, int y){
     // https://docs.microsoft.com/en-us/windows/console/console-functions
     COORD koordinaten;
@@ -24,12 +19,7 @@ void set_cursor(int x, int y){
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), koordinaten);
 }
 
-/**
- * @brief Get the console window size object
- * 
- * @param hConsoleOutput 
- * @return COORD 
- */
+
 COORD get_console_window_size(HANDLE hConsoleOutput){
     COORD size;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -43,11 +33,7 @@ COORD get_console_window_size(HANDLE hConsoleOutput){
     return size;
 }
 
-/**
- * @brief Set the fontsize object
- * 
- * @param size 
- */
+
 void set_fontsize(int size){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_FONT_INFOEX cfi;
@@ -56,12 +42,7 @@ void set_fontsize(int size){
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
-/**
- * @brief draws a menu
- * 
- * @param Menu_Button 
- * @param array_length 
- */
+
 void draw_menu(struct menu_button Menu_Button[5], int array_length){
 
     for (int i = 0; i < array_length; i++){
@@ -74,12 +55,6 @@ void draw_menu(struct menu_button Menu_Button[5], int array_length){
     set_cursor(0,0);
 }
 
-/**
- * @brief 
- * 
- * @param Menu_Button 
- * @param array_length 
- */
 void draw_settings_menu_values(struct menu_button Menu_Button[5], int array_length, struct settings gamesettings){
  
     for (int i = 0; i < array_length; i++){
@@ -117,12 +92,6 @@ void draw_settings_menu_values(struct menu_button Menu_Button[5], int array_leng
 
 }
 
-/**
- * @brief 
- * 
- * @param Menu_Button 
- * @param array_length 
- */
 void draw_rule_menu_values(struct menu_button Menu_Button[5], int array_length, struct rule gamerules){
  
     for (int i = 0; i < array_length; i++){
@@ -148,13 +117,7 @@ void draw_rule_menu_values(struct menu_button Menu_Button[5], int array_length, 
 
 }
 
-/**
- * @brief 
- * 
- * @param cursor_pos 
- * @return int 
- */
-int edit_setting_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos){
+void edit_setting_value(struct settings *gamesettings, struct menu_button Menu_Button[5], int cursor_pos){
 
         switch (cursor_pos)
         {
@@ -248,12 +211,9 @@ int edit_setting_value(struct settings *gamesettings, struct menu_button Menu_Bu
 
                 break;
         }
-
-
-    return 0;
 }
 
-int edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], int cursor_pos){
+void edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], int cursor_pos){
 
         switch (cursor_pos)
         {
@@ -317,12 +277,6 @@ void set_value_cursor(struct menu_button Menu_Button[5], int cursor_pos){
     set_cursor(Menu_Button[cursor_pos].pos.X + sizeof(Menu_Button[cursor_pos].label) + 3, Menu_Button[cursor_pos].pos.Y);
 }
 
-
-/**
- * @brief draws the cursor on a specific coord
- * 
- * @param cords
- */
 void draw_cursor(COORD cords){
     char cursor[] = "-->";
     set_cursor( cords.X - sizeof(cursor) + 1, cords.Y);
@@ -331,11 +285,6 @@ void draw_cursor(COORD cords){
     set_cursor(0,0);
 }
 
-/**
- * @brief eareses the cursor on a specific coord
- * 
- * @param cords 
- */
 void erase_cursor(COORD cords){
     char cursor_eraser[] = "   ";
     set_cursor( cords.X - sizeof(cursor_eraser) + 1, cords.Y);
@@ -343,10 +292,6 @@ void erase_cursor(COORD cords){
     set_cursor(0,0);
 }
 
-/**
- * @brief sets the console to fullscreen (same as alt+enter)
- * 
- */
 void set_console_fullscreen(){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     // Consolewindow -> Alt+Enter
@@ -355,13 +300,6 @@ void set_console_fullscreen(){
     SetConsoleScreenBufferSize(consoleHandle, consoleSize);     
 }
 
-/**
- * @brief Set the menucursor to specific menu point
- * 
- * @param Menu_Button 
- * @param array_length 
- * @param position 
- */
 void set_menucursor(struct menu_button Menu_Button[3], int array_length, int position){
 
     for (int i = 0; i < array_length; i++)
@@ -374,12 +312,6 @@ void set_menucursor(struct menu_button Menu_Button[3], int array_length, int pos
     }
 }
 
-/**
- * @brief gibt das Spiel-Logo an Position x,y aus
- * 
- * @param x 
- * @param y 
- */
 void print_logo(int x, int y){
 
     set_cursor(x, y);

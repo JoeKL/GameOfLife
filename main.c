@@ -1,11 +1,11 @@
 /**
  * @file main.c
  * @author Lothar Gomoluch, Oliver Röckener und Niko Tepe
- * @brief 
+ * @brief
  * @date 05.06.2020
- * 
+ *
  * @copyright Copyright (c) 2020
- * 
+ *
  */
 
 #include <stdio.h>
@@ -30,7 +30,7 @@ struct menu_button startMenu_Button[2];
 struct menu_button settingsMenu_Button[6];
 struct menu_button ruleMenu_Button[3];
 
-int aliveCells = 0; 
+int aliveCells = 0;
 int aliveCellsPrevGen = 0;
 int currentGeneration = 0;
 int iterationsSinceLastChange = 0;
@@ -46,7 +46,7 @@ void init_settings();
 int main(){
 
     SetConsoleTitle((LPCTSTR) "Game of Life");
-    
+
     set_console_fullscreen();
     init_settings();
     main_menu();
@@ -55,8 +55,8 @@ int main(){
 }
 
 /**
- * @brief 
- * 
+ * @brief initialisiert Grundwerte für die Programmausführung
+ *
  */
 void init_settings(){
     //setze den rand() seed auf Sekunden seit Epoche
@@ -80,7 +80,7 @@ void init_settings(){
     strcpy(mainMenu_Button[0].label, "start");
     mainMenu_Button[0].pos.X = 110;
     mainMenu_Button[0].pos.Y = 20;
-    
+
     strcpy(mainMenu_Button[1].label, "settings");
     mainMenu_Button[1].pos.X = 110;
     mainMenu_Button[1].pos.Y = 22;
@@ -122,7 +122,7 @@ void init_settings(){
     strcpy(settingsMenu_Button[4].label, "symbolAlive");
     settingsMenu_Button[4].pos.X = 124;
     settingsMenu_Button[4].pos.Y = 28;
-    
+
     strcpy(settingsMenu_Button[5].label, "symbolDead");
     settingsMenu_Button[5].pos.X = 124;
     settingsMenu_Button[5].pos.Y = 30;
@@ -159,10 +159,10 @@ void init_settings(){
 }
 
 /**
- * @brief 
- * 
- * @param generationsToCalc 
- * @param ticksPerSecond 
+ * @brief
+ *
+ * @param generationsToCalc
+ * @param ticksPerSecond
  */
 void run(int generationsToCalc, int ticksPerSecond){
 
@@ -172,7 +172,7 @@ void run(int generationsToCalc, int ticksPerSecond){
     int end_game = 0;
     int pause_game = 0;
 
-    aliveCells = 0; 
+    aliveCells = 0;
     aliveCellsPrevGen = 0;
     currentGeneration = 0;
     iterationsSinceLastChange = 0;
@@ -182,18 +182,18 @@ void run(int generationsToCalc, int ticksPerSecond){
 
         //Schlafe in jedem Tick für 1000ms/ticksPerSecond -> 1000/30 = 33.3ms
         Sleep((DWORD) 1000/ticksPerSecond);
-        
+
         if(!pause_game){
             tick(&end_game, &pause_game);
             calculated_ticks++;
         }
-        
+
         draw_hud(gamesettings, aliveCells, currentGeneration, generationsToCalc);
 
         // +++++++ KeyStonks +++++++
         if (kbhit()){
             int ch = _getch();
-            
+
             if(ch == 27){
 
                 //wenn *ESC* dann end game
@@ -207,7 +207,7 @@ void run(int generationsToCalc, int ticksPerSecond){
                 } else {
                     pause_game = 0;
                 }
-                
+
             } else if(ch == 115){
 
                 //wenn *s* dann save gamestate in preset
@@ -219,7 +219,7 @@ void run(int generationsToCalc, int ticksPerSecond){
                 tick(&end_game, &pause_game);
                 calculated_ticks++;
             }
-        }  
+        }
 
         // wenn in tick() end_game > 0 gesetzt wurde, dann breche aus der While-Schleife
         if(end_game) {
@@ -229,10 +229,10 @@ void run(int generationsToCalc, int ticksPerSecond){
 }
 
 /**
- * @brief 
- * 
- * @param end_game 
- * @param pause_game 
+ * @brief Diese Funktion berechnet die nächste Iteration des GOL
+ *
+ * @param end_game
+ * @param pause_game
  */
 void tick(int *end_game, int *pause_game){
 
@@ -249,23 +249,23 @@ void tick(int *end_game, int *pause_game){
 
             //abfragen ob es überhaupt lebende Nachbarn gibt
             if (gridcopy[x][y].livingNeighbors){
-                
+
                 //Eine tote Zelle mit genau drei lebenden Nachbarn wird in der Folgegeneration neu geboren.
                 if(gridcopy[x][y].livingNeighbors == gamerules.rebornRule && gridcopy[x][y].alive == 0){
                     grid[x][y].alive = 1;
-                    add_neighborhood(grid[x][y]); 
+                    add_neighborhood(grid[x][y]);
                     revive_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit weniger als zwei lebenden Nachbarn sterben in der Folgegeneration an Einsamkeit.
                 if (gridcopy[x][y].livingNeighbors < gamerules.lonelinessRule && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
-                    sub_neighborhood(grid[x][y]); 
+                    sub_neighborhood(grid[x][y]);
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
                 } else
                 // Lebende Zellen mit mehr als drei lebenden Nachbarn sterben in der Folgegeneration an  Überbevölkerung.
                 if (gridcopy[x][y].livingNeighbors > gamerules.overpopulationRule && gridcopy[x][y].alive == 1) {
                     grid[x][y].alive = 0;
-                    sub_neighborhood(grid[x][y]); 
+                    sub_neighborhood(grid[x][y]);
                     kill_buffer_at_coord(buffer, gamesettings, x, y);
                 }
             }
@@ -284,7 +284,7 @@ void tick(int *end_game, int *pause_game){
     }
 
     aliveCellsPrevGen = aliveCells;
-    
+
     //spiel wird anch 20 iterationen mit der gleichen anzahl lebender Zellen abgebrochen
     if (iterationsSinceLastChange >= 20){
        *end_game = 1;
@@ -293,9 +293,9 @@ void tick(int *end_game, int *pause_game){
 }
 
 /**
- * @brief 
- * 
- * @param is_random 
+ * @brief diese Funktion startet ein Spiel
+ *
+ * @param is_random legt fest ob das Spiel zufällig generiert sein soll
  */
 void start_game(int is_random){
 
@@ -304,9 +304,9 @@ void start_game(int is_random){
     alloc_buffer(&buffer, gamesettings.gridsize);
 
     initialize_buffer(
-                buffer, 
-                gamesettings.gridsize, 
-                gamesettings.symbolAlive, 
+                buffer,
+                gamesettings.gridsize,
+                gamesettings.symbolAlive,
                 gamesettings.symbolDead
     );
 
@@ -322,7 +322,7 @@ void start_game(int is_random){
     define_neighborhood(gridcopy, gamesettings.gridsize);
 
     calc_all_neighbors(grid, gamesettings.gridsize);
-    
+
     run(gamesettings.generationsToCalc, gamesettings.iterationsPerSecond);
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
@@ -331,8 +331,8 @@ void start_game(int is_random){
 }
 
 /**
- * @brief 
- * 
+ * @brief generiert ein Untermenü: Settingsmenu
+ *
  */
 void settings_menu(){
     int settings_menu_cursor_position = 0;
@@ -341,19 +341,19 @@ void settings_menu(){
     while (refresh_menu == 1)
     {
         draw_menu(
-                settingsMenu_Button, 
+                settingsMenu_Button,
                 sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0])
         );
 
         draw_settings_menu_values(
-                settingsMenu_Button, 
-                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), 
+                settingsMenu_Button,
+                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]),
                 gamesettings
         );
-        
+
         set_menucursor(
-                settingsMenu_Button, 
-                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]), 
+                settingsMenu_Button,
+                sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]),
                 settings_menu_cursor_position
         );
 
@@ -386,12 +386,12 @@ void settings_menu(){
                             //%hu == short unsigned
                             edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
-                        
+
                         case 1:
                             //%hu == short unsigned
-                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);    
+                            edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
-                            
+
                         case 2:
                             edit_setting_value(&gamesettings, settingsMenu_Button, settings_menu_cursor_position);
                             break;
@@ -417,7 +417,7 @@ void settings_menu(){
                     break;
             }
         }
-        
+
         if(settings_menu_cursor_position < 0){
             settings_menu_cursor_position = 0;
         }
@@ -425,14 +425,14 @@ void settings_menu(){
         if(settings_menu_cursor_position > sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]) - 1){
             settings_menu_cursor_position = sizeof(settingsMenu_Button)/sizeof(settingsMenu_Button[0]) - 1;
         }
-        
+
     }
 
 }
 
 /**
- * @brief 
- * 
+ * @brief generiert ein Untermenü: startmenu
+ *
  */
 void start_menu(){
 
@@ -442,13 +442,13 @@ void start_menu(){
     while (refresh_menu == 1)
     {
         draw_menu(
-                startMenu_Button, 
+                startMenu_Button,
                 sizeof(startMenu_Button)/sizeof(startMenu_Button[0])
         );
 
         set_menucursor(
-                startMenu_Button, 
-                sizeof(startMenu_Button)/sizeof(startMenu_Button[0]), 
+                startMenu_Button,
+                sizeof(startMenu_Button)/sizeof(startMenu_Button[0]),
                 start_menu_cursor_position
         );
 
@@ -473,21 +473,21 @@ void start_menu(){
             {
                 //ENTER
                 case 13:
-                    
+
                     switch (start_menu_cursor_position)
                     {
                         case 0:
                             system("cls");
-                            start_game(1);  
-                            system("cls");  
+                            start_game(1);
+                            system("cls");
 
                             refresh_menu = 0;
                             break;
-                        
+
                         case 1:
                             system("cls");
-                            start_game(0);  
-                            system("cls");  
+                            start_game(0);
+                            system("cls");
 
                             refresh_menu = 0;
                             break;
@@ -502,7 +502,7 @@ void start_menu(){
             }
         }
 
-        
+
         if(start_menu_cursor_position < 0){
             start_menu_cursor_position = 0;
         }
@@ -515,6 +515,10 @@ void start_menu(){
 
 }
 
+/**
+ * @brief generiert ein Untermenü: Rulemenu
+ * 
+ */
 void rule_menu(){
     int rule_menu_cursor_position = 0;
 
@@ -522,19 +526,19 @@ void rule_menu(){
     while (refresh_menu == 1)
     {
         draw_menu(
-                ruleMenu_Button, 
+                ruleMenu_Button,
                 sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0])
         );
 
         draw_rule_menu_values(
-                ruleMenu_Button, 
-                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]), 
+                ruleMenu_Button,
+                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]),
                 gamerules
         );
-        
+
         set_menucursor(
-                ruleMenu_Button, 
-                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]), 
+                ruleMenu_Button,
+                sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]),
                 rule_menu_cursor_position
         );
 
@@ -566,11 +570,11 @@ void rule_menu(){
                         case 0:
                             edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);
                             break;
-                        
+
                         case 1:
-                            edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);    
+                            edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);
                             break;
-                            
+
                         case 2:
                             edit_rule_value(&gamerules, ruleMenu_Button, rule_menu_cursor_position);
                             break;
@@ -584,7 +588,7 @@ void rule_menu(){
                     break;
             }
         }
-        
+
         if(rule_menu_cursor_position < 0){
             rule_menu_cursor_position = 0;
         }
@@ -592,31 +596,31 @@ void rule_menu(){
         if(rule_menu_cursor_position > sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]) - 1){
             rule_menu_cursor_position = sizeof(ruleMenu_Button)/sizeof(ruleMenu_Button[0]) - 1;
         }
-        
+
     }
 
 }
 
 /**
- * @brief 
- * 
+ * @brief generiert das Hauptmenü
+ *
  */
 void main_menu(){
 
     int main_menu_cursor_position = 0;
-   
+
     while (1)
     {
         print_logo(86, 10);
 
         draw_menu(
-                mainMenu_Button, 
+                mainMenu_Button,
                 sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0])
         );
 
         set_menucursor(
-                mainMenu_Button, 
-                sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]), 
+                mainMenu_Button,
+                sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]),
                 main_menu_cursor_position
         );
 
@@ -644,18 +648,18 @@ void main_menu(){
 
                     switch (main_menu_cursor_position)
                     {
-                        case 0:      
+                        case 0:
                             start_menu();
                             break;
-                        
+
                         case 1:
                             settings_menu();
                             break;
-                            
+
                         case 2:
                             rule_menu();
                             break;
-                            
+
                         case 3:
                             exit(0);
                             break;
@@ -676,7 +680,7 @@ void main_menu(){
         if(main_menu_cursor_position > sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]) - 1){
             main_menu_cursor_position = sizeof(mainMenu_Button)/sizeof(mainMenu_Button[0]) - 1;
         }
- 
+
     }
-    
+
 }
