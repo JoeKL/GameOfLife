@@ -31,6 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="include/buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/buffer.h" />
+		<Unit filename="include/game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/game.h" />
+		<Unit filename="include/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/menu.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
