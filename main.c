@@ -159,10 +159,10 @@ void init_settings(){
 }
 
 /**
- * @brief
+ * @brief führt den Kern des Spiels aus
  *
- * @param generationsToCalc
- * @param ticksPerSecond
+ * @param generationsToCalc zu berechnende Generationen
+ * @param ticksPerSecond Ticks pro Sekunde
  */
 void run(int generationsToCalc, int ticksPerSecond){
 
@@ -231,8 +231,8 @@ void run(int generationsToCalc, int ticksPerSecond){
 /**
  * @brief Diese Funktion berechnet die nächste Iteration des GOL
  *
- * @param end_game
- * @param pause_game
+ * @param end_game Verweis auf Int Value
+ * @param pause_game Verweis auf Int Value
  */
 void tick(int *end_game, int *pause_game){
 
