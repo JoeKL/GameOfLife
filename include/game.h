@@ -44,6 +44,12 @@ struct settings{
 };
 
 
+struct rule{
+    int rebornRule;
+    int lonelinessRule;
+    int overpopulationRule;
+};
+
 /**
  * @brief Generiert eine Middle Square Weyl Sequence um daraus eine Randomzahl zu generieren.
  * https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/

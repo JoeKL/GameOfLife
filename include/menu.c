@@ -267,8 +267,6 @@ void edit_rule_value(struct rule *gamerules, struct menu_button Menu_Button[3], 
                 break;
         }
 
-
-    return 0;
 }
 
 void set_value_cursor(struct menu_button Menu_Button[5], int cursor_pos){
