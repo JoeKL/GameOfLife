@@ -1,18 +1,17 @@
 /**
  * @file menu.h
  * @author Lothar Gomoluch, Oliver Röckener und Niko Tepe
- * @brief 
+ * @brief
  * @date 05.06.2020
- * 
+ *
  * @copyright Copyright (c) 2020
- * 
+ *
  */
 
 #ifndef MENU_H
 #define MENU_H
 
 #include <windows.h>
-#include <cstdio>
 #include <string.h>
 #include "game.h"
 
@@ -30,26 +29,26 @@ void set_fontsize(int size);
 void draw_menu(struct menu_button Menu_Button[3], int array_length);
 
 void draw_settings_menu_values(
-                struct menu_button Menu_Button[3], 
-                int array_length, 
+                struct menu_button Menu_Button[3],
+                int array_length,
                 struct settings gamesettings
 );
 
 void draw_rule_menu_values(
-                struct menu_button Menu_Button[3], 
-                int array_length, 
+                struct menu_button Menu_Button[3],
+                int array_length,
                 struct rule gamerules
 );
 
 int edit_setting_value(
-        struct settings *gamesettings, 
-        struct menu_button Menu_Button[5], 
+        struct settings *gamesettings,
+        struct menu_button Menu_Button[5],
         int cursor_pos
 );
 
 int edit_rule_value(
-        struct rule *gamerules, 
-        struct menu_button Menu_Button[5], 
+        struct rule *gamerules,
+        struct menu_button Menu_Button[5],
         int cursor_pos
 );
 

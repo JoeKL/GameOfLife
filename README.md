@@ -1,6 +1,7 @@
 # Game Of Life - C Implementierung
 ##### von Lothar Gomoluch, Oliver Röckener und Niko Tepe
 
+(https://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win32/Personal Builds/mingw-builds/installer/mingw-w64-install.exe/download "MinGW Compiler used")
 
 ## Dokumentation
 
