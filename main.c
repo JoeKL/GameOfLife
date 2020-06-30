@@ -327,7 +327,7 @@ void start_game(int is_random){
 
     dealloc_grid(&grid, gamesettings.gridsize.X);
     dealloc_grid(&gridcopy, gamesettings.gridsize.X);
-    dealloc_buffer(&buffer);
+    dealloc_buffer(buffer);
 }
 
 /**

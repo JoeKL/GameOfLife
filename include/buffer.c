@@ -26,7 +26,7 @@ void alloc_buffer(char **buffer, COORD gridsize){
 }
 
 
-void dealloc_buffer(char **buffer){
+void dealloc_buffer(char *buffer){
     free(buffer);
 }
 

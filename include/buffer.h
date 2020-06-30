@@ -30,7 +30,7 @@ void alloc_buffer(char **buffer, COORD gridsize);
  * 
  * @param buffer Verweis auf den Buffer
  */
-void dealloc_buffer(char **buffer);
+void dealloc_buffer(char *buffer);
 
 /**
  * @brief initialisiert den Buffer
