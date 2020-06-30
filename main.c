@@ -14,6 +14,7 @@
 #include <windows.h>
 #include <conio.h>
 
+
 #include "include/menu.h"
 #include "include/game.h"
 #include "include/buffer.h"
@@ -216,6 +217,8 @@ void run(int generationsToCalc, int ticksPerSecond){
                 printf("generation %i has been saved as 'preset.txt'", currentGeneration);
 
             } else if(ch == 13 && pause_game == 1){
+
+                //wenn *enter* dann mache einen Tick
                 tick(&end_game, &pause_game);
                 calculated_ticks++;
             }
